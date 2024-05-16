@@ -9,6 +9,7 @@ public class GrafWczytajTxt {
     private String[] wykorzystaneNazwy;
     private String[] wykorzystaneLiscie;
     private String[] wykorzystaneEtykiety;
+    private double odlegloscMiedzyWierzcholkami;
     private double aktualnySrodek;
     private boolean wKtoraStrone;
     private boolean odwrotnaStrona;
@@ -27,6 +28,7 @@ public class GrafWczytajTxt {
         this.wKtoraStrone = true;
         this.odwrotnaStrona = false;
         this.aktualnySrodek=0;
+        this.odlegloscMiedzyWierzcholkami = 15;
     }
     public void loadGraph(String filePath, Drzewo drzewo) {
         try(InputStream is = getClass().getResourceAsStream(filePath);
@@ -75,16 +77,16 @@ public class GrafWczytajTxt {
                     parts[liczbaKresek]=parts[liczbaKresek] + ".".repeat(ileRazyTaSamaNazwa);
                     Wierzcholek wierzcholek = new Wierzcholek(parts[liczbaKresek],nazwa);
                     drzewo.dodajWierzcholek(wierzcholek);
+                    wykorzystaneNazwy[wykorzystaneNazwy.length-1] = parts[liczbaKresek];
+                    wykorzystanePary.add(new Para(parts[liczbaKresek],liczbaKresek));
                     if(odwrotnaStrona)
                     {
-                        ustawPolozenieWierzcholka(wierzcholek,drzewo,liczbaKresek,!wKtoraStrone,false);
+                        ustawPolozenieWierzcholka(wierzcholek,drzewo,liczbaKresek,!wKtoraStrone,false,linia);
                     }
                     else
                     {
-                        ustawPolozenieWierzcholka(wierzcholek,drzewo,liczbaKresek,wKtoraStrone,false);
+                        ustawPolozenieWierzcholka(wierzcholek,drzewo,liczbaKresek,wKtoraStrone,false,linia);
                     }
-                    wykorzystaneNazwy[wykorzystaneNazwy.length-1] = parts[liczbaKresek];
-                    wykorzystanePary.add(new Para(parts[liczbaKresek],liczbaKresek));
                     for(int i=wykorzystanePary.size()-2;i>=0;i--)
                     {
                         if(wykorzystanePary.get(i).getLiczbaKresek()==liczbaKresek-1)
@@ -96,6 +98,26 @@ public class GrafWczytajTxt {
                                     poprzednieParts[liczbaKresekPoprzednieWciecie+1]+" "+poprzednieParts[liczbaKresekPoprzednieWciecie+2]);
                             drzewo.dodajKrawedz(krawedz);
                             break;
+                        }
+                    }
+                }
+                else
+                {
+                    for(int i=wykorzystanePary.size()-1;i>=0;i--)
+                    {
+                        if(wykorzystanePary.get(i).getLiczbaKresek()<liczbaKresek)
+                        {
+                            break;
+                        }
+                        if(wykorzystanePary.get(i).getLiczbaKresek()==liczbaKresek)
+                        {
+                            if(wykorzystanePary.get(i).getNazwa().contains(nazwa))
+                            {
+                                double starySrodek = aktualnySrodek;
+                                aktualnySrodek = wykorzystanePary.get(i).getSrodek();
+                                System.out.println("stare: "+ starySrodek+" nowy: "+aktualnySrodek+ " "+wykorzystanePary.get(i).getNazwa());
+                                break;
+                            }
                         }
                     }
                 }
@@ -124,6 +146,8 @@ public class GrafWczytajTxt {
         }
         poprzedniaLinia = linia;
         wczytaneDane.add(new Para(parts[liczbaKresek],liczbaKresek));
+        System.out.println("Na koncu: "+wykorzystanePary.get(wykorzystanePary.size()-1).getNazwa() + " " + +wykorzystanePary.get(wykorzystanePary.size()-1).getSrodek());
+        System.out.println(aktualnySrodek);
     }
     private int obliczLiczbeKresek(String linia)
     {
@@ -189,11 +213,11 @@ public class GrafWczytajTxt {
         drzewo.dodajWierzcholek(wierzcholek1);
         if(odwrotnaStrona)
         {
-            ustawPolozenieWierzcholka(wierzcholek1,drzewo,liczbaKresek,!wKtoraStrone,true);
+            ustawPolozenieWierzcholka(wierzcholek1,drzewo,liczbaKresek,!wKtoraStrone,true,linia);
         }
         else
         {
-            ustawPolozenieWierzcholka(wierzcholek1,drzewo,liczbaKresek,wKtoraStrone,true);
+            ustawPolozenieWierzcholka(wierzcholek1,drzewo,liczbaKresek,wKtoraStrone,true,linia);
         }
         String id="";
         for(int i=wykorzystanePary.size()-1;i>=0;i--)
@@ -211,35 +235,124 @@ public class GrafWczytajTxt {
         drzewo.dodajKrawedz(krawedz1);
         wykorzystaneLiscie[wykorzystaneLiscie.length-1] = parts[liczbaKresek+5];
     }
-    private void ustawPolozenieWierzcholka(Wierzcholek wierzcholek,Drzewo drzewo,int liczbaKresek,boolean prawoCzyLewo,boolean czyLisc)
+    private void ustawPolozenieWierzcholka(Wierzcholek wierzcholek,Drzewo drzewo,int liczbaKresek,boolean prawoCzyLewo,boolean czyLisc,String linia)
     {
         double zmiennaDodajaca = 0;
+
+        System.out.println("poprzednia linia: "+poprzedniaLinia+" : "+obliczLiczbeKresek(poprzedniaLinia));
+        System.out.println("Aktualna linia: "+linia+" : "+liczbaKresek+" : "+obliczLiczbeKresek(linia));
+
+//        if(obliczLiczbeKresek(poprzedniaLinia)==liczbaKresek)
+//        {
+//            for(int i=wykorzystanePary.size()-2;i>=0;i--)
+//            {
+//                if(obliczLiczbeKresek(linia)>wykorzystanePary.get(i).getLiczbaKresek())
+//                {
+//                    System.out.println("zmieniam: ");
+//                    aktualnySrodek = wykorzystanePary.get(i).getSrodek();
+//                    System.out.println("zmieniam: "+aktualnySrodek);
+//                    break;
+//                }
+//            }
+//        }
+
+
         if(czyLisc==true)
         {
             liczbaKresek++;
         }
         if(wKtoraStrone)
         {
+            boolean flaga = true;
+            if(liczbaKresek==1)
+            {
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",aktualnySrodek+odlegloscMiedzyWierzcholkami*4-liczbaKresek,-20*liczbaKresek+zmiennaDodajaca);
+                flaga = false;
+            }
             if(prawoCzyLewo)
             {
-                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",25+4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+                if(flaga)
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",aktualnySrodek+odlegloscMiedzyWierzcholkami-liczbaKresek,-20*liczbaKresek+zmiennaDodajaca);
+                if(czyLisc)
+                {
+                    System.out.println("Pozycja liscia: "+(aktualnySrodek+odlegloscMiedzyWierzcholkami));
+                }
+                if(!czyLisc)
+                {
+                    if(flaga)
+                    aktualnySrodek=aktualnySrodek+odlegloscMiedzyWierzcholkami;
+                    else
+                    {
+                        aktualnySrodek=aktualnySrodek+odlegloscMiedzyWierzcholkami*4;
+                    }
+                }
+
             }
             else
             {
-                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",25-4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+                System.out.println("Ide w lewo");
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",aktualnySrodek-odlegloscMiedzyWierzcholkami+liczbaKresek,-20*liczbaKresek+zmiennaDodajaca);
+                if(czyLisc)
+                {
+                    System.out.println("Pozycja liscia: "+(aktualnySrodek-odlegloscMiedzyWierzcholkami));
+                }
+                if(!czyLisc)
+                {
+                    aktualnySrodek=aktualnySrodek-odlegloscMiedzyWierzcholkami;
+
+                }
+
             }
+
         }
         if(!wKtoraStrone)
         {
             if(prawoCzyLewo)
             {
-                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-25+4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-aktualnySrodek+odlegloscMiedzyWierzcholkami-liczbaKresek,-20*liczbaKresek+zmiennaDodajaca);
+                if(czyLisc)
+                {
+                    System.out.println("Pozycja liscia: "+(aktualnySrodek-odlegloscMiedzyWierzcholkami));
+                }
+                if(!czyLisc)
+                {
+                    aktualnySrodek=aktualnySrodek-odlegloscMiedzyWierzcholkami;
+                }
+
             }
             else
             {
-                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-25-4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+                System.out.println("Ide w lewo");
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-aktualnySrodek-odlegloscMiedzyWierzcholkami+liczbaKresek,-20*liczbaKresek+zmiennaDodajaca);
+                if(czyLisc)
+                {
+                    System.out.println("Pozycja liscia: "+(aktualnySrodek+odlegloscMiedzyWierzcholkami));
+                }
+                if(!czyLisc)
+                {
+                    aktualnySrodek=aktualnySrodek+odlegloscMiedzyWierzcholkami;
+
+                }
+
             }
+
         }
+//        if(!wKtoraStrone)
+//        {
+//            if(prawoCzyLewo)
+//            {
+//                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-25+4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+//            }
+//            else
+//            {
+//                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-25-4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+//            }
+//        }
+        if(!czyLisc)
+        {
+            wykorzystanePary.get(wykorzystanePary.size()-1).setSrodek(aktualnySrodek);
+        }
+
 
         odwrotnaStrona = false;
     }
