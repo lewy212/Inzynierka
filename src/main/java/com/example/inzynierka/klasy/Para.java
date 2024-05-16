@@ -4,6 +4,7 @@ public class Para
 {
     private String nazwa;
     private int liczbaKresek;
+    private double srodek;
 
     public Para(String nazwa, int liczbaKresek) {
         this.nazwa = nazwa;
@@ -24,5 +25,13 @@ public class Para
 
     public void setLiczbaKresek(int liczbaKresek) {
         this.liczbaKresek = liczbaKresek;
+    }
+
+    public double getSrodek() {
+        return srodek;
+    }
+
+    public void setSrodek(double srodek) {
+        this.srodek = srodek;
     }
 }

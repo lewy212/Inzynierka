@@ -9,6 +9,9 @@ public class GrafWczytajTxt {
     private String[] wykorzystaneNazwy;
     private String[] wykorzystaneLiscie;
     private String[] wykorzystaneEtykiety;
+    private double aktualnySrodek;
+    private boolean wKtoraStrone;
+    private boolean odwrotnaStrona;
     private String poprzednieWciecie;
     private String poprzedniaLinia;
     private List<Para> wykorzystanePary;
@@ -21,6 +24,9 @@ public class GrafWczytajTxt {
         this.wczytaneDane = new ArrayList<>();
         this.poprzednieWciecie = "";
         this.poprzedniaLinia = "";
+        this.wKtoraStrone = true;
+        this.odwrotnaStrona = false;
+        this.aktualnySrodek=0;
     }
     public void loadGraph(String filePath, Drzewo drzewo) {
         try(InputStream is = getClass().getResourceAsStream(filePath);
@@ -43,7 +49,7 @@ public class GrafWczytajTxt {
         String[] poprzednieParts = poprzednieWciecie.split(" (?=\\S)");
         if(wykorzystaneNazwy.length > 0)
         {
-            if(obliczLiczbeKresek(poprzednieWciecie)>liczbaKresek)
+            if(obliczLiczbeKresek(poprzednieWciecie)>=liczbaKresek)
             {
                 poprzednieWciecie = linia;
                 poprzednieParts = poprzednieWciecie.split(" (?=\\S)");
@@ -69,6 +75,14 @@ public class GrafWczytajTxt {
                     parts[liczbaKresek]=parts[liczbaKresek] + ".".repeat(ileRazyTaSamaNazwa);
                     Wierzcholek wierzcholek = new Wierzcholek(parts[liczbaKresek],nazwa);
                     drzewo.dodajWierzcholek(wierzcholek);
+                    if(odwrotnaStrona)
+                    {
+                        ustawPolozenieWierzcholka(wierzcholek,drzewo,liczbaKresek,!wKtoraStrone,false);
+                    }
+                    else
+                    {
+                        ustawPolozenieWierzcholka(wierzcholek,drzewo,liczbaKresek,wKtoraStrone,false);
+                    }
                     wykorzystaneNazwy[wykorzystaneNazwy.length-1] = parts[liczbaKresek];
                     wykorzystanePary.add(new Para(parts[liczbaKresek],liczbaKresek));
                     for(int i=wykorzystanePary.size()-2;i>=0;i--)
@@ -76,8 +90,10 @@ public class GrafWczytajTxt {
                         if(wykorzystanePary.get(i).getLiczbaKresek()==liczbaKresek-1)
                         {
                             int liczbaKresekPoprzednieWciecie = obliczLiczbeKresek(poprzednieWciecie);
-                            Krawedz krawedz = new Krawedz(wykorzystanePary.get(i).getNazwa()+wykorzystanePary.get(wykorzystanePary.size()-1).getNazwa(),wykorzystanePary.get(i).getNazwa(),
-                                    wykorzystanePary.get(wykorzystanePary.size()-1).getNazwa(),poprzednieParts[liczbaKresekPoprzednieWciecie+1]+poprzednieParts[liczbaKresekPoprzednieWciecie+2]);
+                            Krawedz krawedz = new Krawedz(wykorzystanePary.get(i).getNazwa()+wykorzystanePary.get(wykorzystanePary.size()-1).getNazwa()
+                                    ,wykorzystanePary.get(i).getNazwa(),
+                                    wykorzystanePary.get(wykorzystanePary.size()-1).getNazwa(),
+                                    poprzednieParts[liczbaKresekPoprzednieWciecie+1]+" "+poprzednieParts[liczbaKresekPoprzednieWciecie+2]);
                             drzewo.dodajKrawedz(krawedz);
                             break;
                         }
@@ -87,6 +103,10 @@ public class GrafWczytajTxt {
                 {
                     stworzLisc(linia,drzewo);
                 }
+            }
+            else
+            {
+                wKtoraStrone = false;
             }
         }
         else
@@ -100,6 +120,7 @@ public class GrafWczytajTxt {
             wykorzystaneNazwy[wykorzystaneNazwy.length-1] = parts[liczbaKresek];
             wykorzystaneEtykiety[wykorzystaneEtykiety.length-1] = parts[liczbaKresek+1]+parts[liczbaKresek+2];
             wykorzystanePary.add(new Para(parts[liczbaKresek],liczbaKresek));
+            wykorzystanePary.get(wykorzystanePary.size()-1).setSrodek(0);
         }
         poprzedniaLinia = linia;
         wczytaneDane.add(new Para(parts[liczbaKresek],liczbaKresek));
@@ -120,7 +141,6 @@ public class GrafWczytajTxt {
     {
         boolean odpowiedz = false;
         int ile=0;
-
         if(wczytaneDane.size()>1){
             for(int i=wczytaneDane.size()-1;i>=0;i--)
             {
@@ -138,6 +158,11 @@ public class GrafWczytajTxt {
                     }
                 }
             }
+        }
+        if(odpowiedz==true)
+        {
+            odwrotnaStrona=true;
+            System.out.println("Istnieje wezel");
         }
         return odpowiedz;
     }
@@ -162,6 +187,14 @@ public class GrafWczytajTxt {
 
         Wierzcholek wierzcholek1 = new Wierzcholek(parts[liczbaKresek+5],nazwa);
         drzewo.dodajWierzcholek(wierzcholek1);
+        if(odwrotnaStrona)
+        {
+            ustawPolozenieWierzcholka(wierzcholek1,drzewo,liczbaKresek,!wKtoraStrone,true);
+        }
+        else
+        {
+            ustawPolozenieWierzcholka(wierzcholek1,drzewo,liczbaKresek,wKtoraStrone,true);
+        }
         String id="";
         for(int i=wykorzystanePary.size()-1;i>=0;i--)
         {
@@ -174,8 +207,40 @@ public class GrafWczytajTxt {
                 }
             }
         }
-        Krawedz krawedz1 = new Krawedz(parts[liczbaKresek+5]+id,parts[liczbaKresek+5],id,parts[liczbaKresek+1]+parts[liczbaKresek+2]);
+        Krawedz krawedz1 = new Krawedz(parts[liczbaKresek+5]+id,parts[liczbaKresek+5],id,parts[liczbaKresek+1]+" "+parts[liczbaKresek+2]);
         drzewo.dodajKrawedz(krawedz1);
         wykorzystaneLiscie[wykorzystaneLiscie.length-1] = parts[liczbaKresek+5];
+    }
+    private void ustawPolozenieWierzcholka(Wierzcholek wierzcholek,Drzewo drzewo,int liczbaKresek,boolean prawoCzyLewo,boolean czyLisc)
+    {
+        double zmiennaDodajaca = 0;
+        if(czyLisc==true)
+        {
+            liczbaKresek++;
+        }
+        if(wKtoraStrone)
+        {
+            if(prawoCzyLewo)
+            {
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",25+4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+            }
+            else
+            {
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",25-4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+            }
+        }
+        if(!wKtoraStrone)
+        {
+            if(prawoCzyLewo)
+            {
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-25+4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+            }
+            else
+            {
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-25-4*liczbaKresek,-8*liczbaKresek+zmiennaDodajaca);
+            }
+        }
+
+        odwrotnaStrona = false;
     }
 }
