@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="borderPaneGlowny" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inzynierka.kontrolery.DrzewoController">
+   <bottom>
+      <HBox alignment="BOTTOM_RIGHT" prefHeight="21.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="zapiszPng" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Zapisz png" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
