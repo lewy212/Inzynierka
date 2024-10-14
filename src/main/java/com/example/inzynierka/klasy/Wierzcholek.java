@@ -1,12 +1,22 @@
 package com.example.inzynierka.klasy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Wierzcholek {
     private String id;
     private String label;
+    private String rodzicId; // Id rodzica
+    private List<String> dzieciId; // Lista identyfikatorów dzieci
+
+    private String wartosc;
+
 
     public Wierzcholek(String id, String label) {
         this.id = id;
         this.label = label;
+        this.rodzicId = null; // Domyślnie brak rodzica
+        this.dzieciId = new ArrayList<>(); // Inicjalizacja listy dzieci
     }
 
     public String getId() {
@@ -24,4 +34,29 @@ public class Wierzcholek {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    public String getRodzicId() {
+        return rodzicId;
+    }
+
+    public void setRodzicId(String rodzicId) {
+        this.rodzicId = rodzicId;
+    }
+
+    public List<String> getDzieciId() {
+        return dzieciId;
+    }
+
+    public void dodajDziecko(String dzieckoId) {
+        this.dzieciId.add(dzieckoId);
+    }
+
+    public String getWartosc() {
+        return wartosc;
+    }
+
+    public void setWartosc(String wartosc) {
+        this.wartosc = wartosc;
+    }
+
 }
