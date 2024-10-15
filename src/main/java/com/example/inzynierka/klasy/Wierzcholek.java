@@ -47,6 +47,10 @@ public class Wierzcholek {
         return dzieciId;
     }
 
+    public void setDzieciId(List<String> dzieciId) {
+        this.dzieciId = dzieciId;
+    }
+
     public void dodajDziecko(String dzieckoId) {
         this.dzieciId.add(dzieckoId);
     }

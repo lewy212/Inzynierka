@@ -2,16 +2,16 @@ package com.example.inzynierka.kontrolery;
 
 import com.example.inzynierka.klasy.Drzewo;
 import com.example.inzynierka.klasy.GrafWczytajTxt;
+import com.example.inzynierka.klasy.Krawedz;
 import com.example.inzynierka.klasy.Wierzcholek;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -19,14 +19,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Node;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.view.Viewer;
+import org.graphstream.ui.view.ViewerListener;
+import org.graphstream.ui.view.ViewerPipe;
+
 import java.util.List;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class DrzewoController {
     @FXML
@@ -59,7 +65,6 @@ public class DrzewoController {
 
         System.out.println(drzewo.getGraf().getNodeCount());
         String tekst = "";
-        // Ustawienia kolumn tabeli
 
         nodeColumn.setCellValueFactory(new PropertyValueFactory<>("label")); // Zmieniamy na label wierzchołka
         parentColumn.setCellValueFactory(new PropertyValueFactory<>("rodzicId")); // Zmieniamy na rodzica
@@ -81,7 +86,6 @@ public class DrzewoController {
                 };
             }
         });
-
         ObservableList<Wierzcholek> daneDrzewa = FXCollections.observableArrayList();
         List<Wierzcholek> listaWierzcholkow = drzewo.getListaWierzcholkow();
         for (Wierzcholek wierzcholek : listaWierzcholkow) {
@@ -98,6 +102,108 @@ public class DrzewoController {
 
         Viewer viewer = new FxViewer(drzewo.getGraf(), Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         Parent graphView = (Parent) viewer.addDefaultView(true);
+
+        // Przetwarzanie kliknięć węzłów
+        ViewerPipe pipe = viewer.newViewerPipe();
+        pipe.addViewerListener(new ViewerListener() {
+            @Override
+            public void viewClosed(String viewName) {
+                // Możesz dodać kod do działania po zamknięciu widoku
+            }
+
+            @Override
+            public void buttonPushed(String nodeId) {
+                Platform.runLater(() -> {
+                    System.out.println("Kliknięto węzeł: " + nodeId);
+
+                    Node originalNode = drzewo.getGraf().getNode(nodeId);
+
+                    if (originalNode != null) {
+                        // Tworzymy dialog do wprowadzenia nowej nazwy
+                        TextInputDialog dialog = new TextInputDialog(nodeId);
+                        dialog.setTitle("Zmiana nazwy węzła");
+                        dialog.setHeaderText("Zmień nazwę węzła");
+                        dialog.setContentText("Wprowadź nową nazwę dla węzła:");
+
+                        // Wyświetlamy dialog i czekamy na wynik
+                        dialog.showAndWait().ifPresent(newId -> {
+                            if (!newId.trim().isEmpty() && drzewo.getGraf().getNode(newId) == null) {
+                                // Sprawdź, czy nowy węzeł już istnieje
+                                System.out.println("Zmieniono ID węzła na: " + newId);
+
+                                // Utwórz nowy węzeł z nowym ID
+                                Node newNode = drzewo.getGraf().addNode(newId);
+                                Wierzcholek nowyWierzcholek = new Wierzcholek(newId,newId);
+                                // Skopiuj atrybuty ze starego węzła
+                                originalNode.attributeKeys().forEach(key -> {
+                                    if (!"ui.label".equals(key)) {
+                                        Object value = originalNode.getAttribute(key);
+                                        newNode.setAttribute(key, value);
+                                    }
+                                });
+                                newNode.setAttribute("ui.label",newId);
+                                // Przenieś krawędzie
+                                originalNode.edges().forEach(edge -> {
+                                    if (Objects.equals(edge.getSourceNode(), originalNode)) {
+                                        // Krawędź wychodząca
+                                        Krawedz krawedz = new Krawedz(newId + edge.getTargetNode().getId(), newId,
+                                                edge.getTargetNode().getId(), edge.getAttribute("ui.label").toString());
+                                        drzewo.dodajKrawedz(krawedz);
+                                    } else {
+                                        // Krawędź przychodząca
+                                        String sourceId = edge.getSourceNode().getId();
+                                        Krawedz krawedz = new Krawedz(sourceId + newId, sourceId, newId, edge.getAttribute("ui.label").toString());
+                                        drzewo.dodajKrawedz(krawedz);
+                                    }
+                                });
+                                drzewo.edytujWierzcholek(nowyWierzcholek, nodeId);
+
+                                drzewo.getGraf().removeNode(nodeId);
+                                tableView.refresh();
+                                System.out.println("Węzeł o ID " + nodeId + " został zmieniony na " + newId);
+                            } else {
+                                System.out.println("Węzeł o ID " + newId + " już istnieje lub ID jest puste.");
+                            }
+                        });
+                    } else {
+                        System.out.println("Nie znaleziono węzła o ID: " + nodeId);
+                    }
+                });
+            }
+
+
+
+
+
+
+
+            @Override
+            public void buttonReleased(String nodeId) {
+                // Możesz dodać kod do działania po zwolnieniu przycisku
+            }
+
+            @Override
+            public void mouseOver(String nodeId) {
+                // Działanie na najeździe myszką
+            }
+
+            @Override
+            public void mouseLeft(String nodeId) {
+                // Działanie na opuszczeniu węzła myszką
+            }
+        });
+
+        // Wątek do przetwarzania zdarzeń
+        new Thread(() -> {
+            while (true) {
+                pipe.pump(); // przetwarza zdarzenia
+                try {
+                    Thread.sleep(100); // aby nie obciążać CPU
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         borderPaneGlowny.setCenter(graphView);
         zapiszPng.setOnAction(event -> {

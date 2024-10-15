@@ -3,10 +3,10 @@ package com.example.inzynierka.klasy;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.fx_viewer.FxViewer;
+import org.graphstream.ui.view.ViewerPipe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Drzewo {
     private Graph graf;
@@ -29,7 +29,6 @@ public class Drzewo {
         graf.removeNode(wierzcholek.getId());
     }
 
-    // Metoda do dodawania krawędzi do drzewa
     public void dodajKrawedz(Krawedz krawedz) {
         // Dodajemy krawędź do grafu
         graf.addEdge(krawedz.getId(), krawedz.getPierwszyPunktId(), krawedz.getDrugiPunktId())
@@ -59,7 +58,36 @@ public class Drzewo {
 
     }
 
-    // Metoda do usuwania krawędzi z drzewa
+    public void edytujWierzcholek(Wierzcholek nowyWierzcholek, String idStaregoWierzcholka) {
+
+        Map<String, Wierzcholek> wierzcholekMap = new HashMap<>();
+        for (Wierzcholek w : listaWierzcholkow) {
+            wierzcholekMap.put(w.getId(), w);
+        }
+        System.out.println("Wywoluje "+idStaregoWierzcholka);
+        Wierzcholek staryWierzcholek = wierzcholekMap.get(idStaregoWierzcholka);
+
+        if (staryWierzcholek != null) {
+            System.out.println("edytuje");
+            // Zaktualizuj istniejący wierzchołek bez jego usuwania z listy
+            staryWierzcholek.setLabel(nowyWierzcholek.getLabel());
+            // Aktualizujemy dzieci
+            List<String> stareDzieci = staryWierzcholek.getDzieciId();
+
+            // Aktualizacja ID dzieci (jeśli się zmieniają)
+            for (String dzieckoId : stareDzieci) {
+                Wierzcholek dziecko = wierzcholekMap.get(dzieckoId);
+                if (dziecko != null && dziecko.getRodzicId().equals(idStaregoWierzcholka)) {
+                    dziecko.setRodzicId(nowyWierzcholek.getId());
+                }
+            }
+            staryWierzcholek.setId(nowyWierzcholek.getId());
+            System.out.println("Wierzchołek o ID " + idStaregoWierzcholka + " został zaktualizowany.");
+        } else {
+            System.out.println("Nie znaleziono wierzchołka o ID: " + idStaregoWierzcholka);
+        }
+    }
+
     public void usunKrawedz(Krawedz krawedz) {
         graf.removeEdge(krawedz.getId());
 
