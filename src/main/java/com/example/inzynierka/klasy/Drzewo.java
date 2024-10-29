@@ -91,8 +91,6 @@ public class Drzewo {
     public void usunKrawedz(Krawedz krawedz) {
         graf.removeEdge(krawedz.getId());
 
-        // Można dodać logikę do usunięcia rodzica z dziecka, jeśli to potrzebne
-        // W tym przypadku, możesz znaleźć dziecko i ustawić jego rodzica na null
     }
 
 
