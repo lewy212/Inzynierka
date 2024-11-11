@@ -231,7 +231,7 @@ public class GrafWczytajTxt {
                 }
             }
         }
-        Krawedz krawedz1 = new Krawedz(parts[liczbaKresek+5]+id,id,parts[liczbaKresek+5],parts[liczbaKresek+1]+" "+parts[liczbaKresek+2]);
+        Krawedz krawedz1 = new Krawedz(id+parts[liczbaKresek+5],id,parts[liczbaKresek+5],parts[liczbaKresek+1]+" "+parts[liczbaKresek+2]);
 
         drzewo.dodajKrawedz(krawedz1);
         wykorzystaneLiscie[wykorzystaneLiscie.length-1] = parts[liczbaKresek+5];

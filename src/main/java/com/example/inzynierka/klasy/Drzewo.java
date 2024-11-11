@@ -33,7 +33,6 @@ public class Drzewo {
         // Dodajemy krawędź do grafu
         graf.addEdge(krawedz.getId(), krawedz.getPierwszyPunktId(), krawedz.getDrugiPunktId())
                 .setAttribute("ui.label", krawedz.getLabel());
-
         // Szukamy rodzica
         Optional<Wierzcholek> opcjonalnyRodzic = listaWierzcholkow.stream()
                 .filter(w -> w.getId().equals(krawedz.getPierwszyPunktId()))

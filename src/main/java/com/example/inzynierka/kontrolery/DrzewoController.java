@@ -55,6 +55,7 @@ public class DrzewoController {
     @FXML
     private TableColumn<Wierzcholek, String> valueColumn;
 
+    private Wierzcholek poprzednioWybranyWierzcholek = null;
     public void initialize()
     {
         Drzewo drzewo = new Drzewo();
@@ -70,12 +71,6 @@ public class DrzewoController {
         nodeColumn.setCellValueFactory(new PropertyValueFactory<>("label")); // Zmieniamy na label wierzchołka
         parentColumn.setCellValueFactory(new PropertyValueFactory<>("rodzicId")); // Zmieniamy na rodzica
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("wartosc")); // Zmieniamy na wartość wierzchołka (jeśli to jest atrybut)
-        borderPaneGlowny.setOnMouseClicked(event -> {
-            double mouseX = event.getX();
-            double mouseY = event.getY();
-            // Wydrukuj pozycję myszki bezpośrednio w lambda
-            System.out.println("Pozycja myszki: X = " + mouseX + ", Y = " + mouseY);
-        });
         parentColumn.setCellFactory(new Callback<TableColumn<Wierzcholek, String>, TableCell<Wierzcholek, String>>() {
             @Override
             public TableCell<Wierzcholek, String> call(TableColumn<Wierzcholek, String> param) {
@@ -105,17 +100,34 @@ public class DrzewoController {
             TableRow<Wierzcholek> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    double nodeColumnStart = nodeColumn.getWidth();
+                    Wierzcholek wybranyWierzcholek = row.getItem();
+                    String nodeId = wybranyWierzcholek.getId();
+                    double wierzcholekColumnStart = nodeColumn.getWidth();
+                    double rodzicColumnStart = parentColumn.getWidth() + wierzcholekColumnStart;
+                    double wartoscColumnStart = valueColumn.getWidth() + rodzicColumnStart;
 
-                    if (event.getX() < nodeColumnStart) {
-                        Wierzcholek wybranyWierzcholek = row.getItem();
-                        String nodeId = wybranyWierzcholek.getId();
+                    if (event.getX() < wierzcholekColumnStart) {
                         zmienWierzcholek2(drzewo, nodeId);
+                    }  else if (event.getX() >= rodzicColumnStart && event.getX() < wartoscColumnStart) {
+                        if(wybranyWierzcholek.getRodzicId()!=null)
+                            zmienWartoscKrawedzi(drzewo,wybranyWierzcholek);
+
+
                     }
+                }
+                if(event.getClickCount() == 1 &&!row.isEmpty() )
+                {
+                    Wierzcholek wybranyWierzcholek = row.getItem();
+                    String nodeId = wybranyWierzcholek.getId();
+                    zmienKolorWybranychElementow(drzewo,wybranyWierzcholek);
+                    poprzednioWybranyWierzcholek=wybranyWierzcholek;
                 }
             });
             return row;
         });
+
+
+
 
 
         for (int i = 0; i < drzewo.getGraf().getNodeCount(); i++) {
@@ -142,8 +154,6 @@ public class DrzewoController {
 
                     System.out.println(edge.getId()+""+edge.getAttribute("ui.label").toString());
 
-                    double[] middlePoint = getEdgeLabelPosition(edge);
-                    System.out.println("Pozycja etykiety dla krawędzi F1F5: x = " + middlePoint[0] + ", y = " + middlePoint[1]);
                     // Sprawdzamy, czy kliknięto na węzeł czy na krawędź
                     if (drzewo.getGraf().getEdge(id) != null) {
                         // Jeśli istnieje krawędź o danym ID
@@ -151,7 +161,7 @@ public class DrzewoController {
                     } else if (drzewo.getGraf().getNode(id) != null) {
                         // Jeśli istnieje węzeł o danym ID
                         System.out.println("Kliknięto węzeł: " + id);
-                        // Wersja GraphStream
+
 
                         zmienWierzcholek2(drzewo, id);
                     }
@@ -160,26 +170,26 @@ public class DrzewoController {
 
             @Override
             public void buttonReleased(String nodeId) {
-                // Możesz dodać kod do działania po zwolnieniu przycisku
+
             }
 
             @Override
             public void mouseOver(String nodeId) {
-                // Działanie na najeździe myszką
+
             }
 
             @Override
             public void mouseLeft(String nodeId) {
-                // Działanie na opuszczeniu węzła myszką
+
             }
         });
 
         // Wątek do przetwarzania zdarzeń
         new Thread(() -> {
             while (true) {
-                pipe.pump(); // przetwarza zdarzenia
+                pipe.pump();
                 try {
-                    Thread.sleep(100); // aby nie obciążać CPU
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -244,7 +254,7 @@ public class DrzewoController {
             // Wyświetlamy dialog i czekamy na wynik
             dialog.showAndWait().ifPresent(newId -> {
                 if (!newId.trim().isEmpty() && drzewo.getGraf().getNode(newId) == null) {
-                   // zmienWierzcholek(drzewo,newId,originalNode,nodeId);
+                    // zmienWierzcholek(drzewo,newId,originalNode,nodeId);
                     // Sprawdź, czy nowy węzeł już istnieje
                     System.out.println("Zmieniono ID węzła na: " + newId);
 
@@ -285,43 +295,44 @@ public class DrzewoController {
             System.out.println("Nie znaleziono węzła o ID: " + nodeId);
         }
     }
-    private String usunKropki(String nazwa) {
-//        while (nazwa.endsWith(".")) {
-//            nazwa = nazwa.substring(0, nazwa.length() - 1);
-//        }
-        return nazwa;
+
+    private void zmienWartoscKrawedzi(Drzewo drzewo, Wierzcholek wierzcholek)
+    {
+        TextInputDialog dialog = new TextInputDialog(wierzcholek.getWartosc());
+        dialog.setTitle("Zmiana wartosci krawedzi");
+        dialog.setHeaderText("Zmień wartosc krawedzi");
+        dialog.setContentText("Wprowadź nową wartosc dla krawedzi:");
+
+        // Wyświetlamy dialog i czekamy na wynik
+        dialog.showAndWait().ifPresent(newValue -> {
+            if (!newValue.trim().isEmpty()) {
+                drzewo.getGraf().getEdge(wierzcholek.getRodzicId()+wierzcholek.getId()).setAttribute("ui.label",newValue);
+                wierzcholek.setWartosc(newValue);
+                tableView.refresh();
+            }
+        });
     }
-    private double[] getEdgeLabelPosition(Edge edge) {
-        // Pobierz węzły krawędzi
-        Node sourceNode = edge.getSourceNode();
-        Node targetNode = edge.getTargetNode();
-
-        // Pobierz współrzędne xy obu węzłów
-        double[] sourceXY = convertToDoubleArray(sourceNode.getAttribute("xy"));
-        double[] targetXY = convertToDoubleArray(targetNode.getAttribute("xy"));
-
-        // Oblicz środek
-        double midX = (sourceXY[0] + targetXY[0]) / 2;
-        double midY = (sourceXY[1] + targetXY[1]) / 2;
-
-        return new double[]{midX, midY};
-    }
-
-    private double[] convertToDoubleArray(Object attr) {
-        if (attr instanceof double[]) {
-            return (double[]) attr; // Bez zmian, jeśli to już double[]
-        } else if (attr instanceof Object[]) {
-            // Konwersja Object[] do double[]
-            double[] result = new double[2];
-            result[0] = ((Number) ((Object[]) attr)[0]).doubleValue();
-            result[1] = ((Number) ((Object[]) attr)[1]).doubleValue();
-            return result;
-        } else {
-            // Możesz rzucić wyjątek lub zwrócić domyślne wartości
-            System.err.println("Błąd: Atrybut 'xy' nie jest typu double[] ani Object[].");
-            return new double[]{0, 0}; // Zwróć domyślne wartości
+    private void zmienKolorWybranychElementow(Drzewo drzewo,Wierzcholek wierzcholek)
+    {
+        if(poprzednioWybranyWierzcholek!=null)
+        {
+            drzewo.getGraf().getNode(poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: red;");
+            drzewo.getGraf().getEdge(poprzednioWybranyWierzcholek.getRodzicId()+poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: black;");
+        }
+        drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","fill-color: green;");
+        Edge edge = drzewo.getGraf().getEdge(wierzcholek.getRodzicId()+wierzcholek.getId());
+        if(edge!=null)
+        {
+            edge.setAttribute("ui.style","fill-color: green;");
         }
     }
+    private String usunKropki(String nazwa) {
+        while (nazwa.endsWith(".")) {
+            nazwa = nazwa.substring(0, nazwa.length() - 1);
+        }
+        return nazwa;
+    }
+
 
 
 }
