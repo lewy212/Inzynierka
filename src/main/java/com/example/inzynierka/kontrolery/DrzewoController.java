@@ -2,6 +2,7 @@ package com.example.inzynierka.kontrolery;
 
 import com.example.inzynierka.klasy.Drzewo;
 import com.example.inzynierka.klasy.GrafWczytajTxt;
+import com.example.inzynierka.klasy.Json.GrafWczytajJson;
 import com.example.inzynierka.klasy.Krawedz;
 import com.example.inzynierka.klasy.Wierzcholek;
 import javafx.application.Platform;
@@ -56,12 +57,12 @@ public class DrzewoController {
     private TableColumn<Wierzcholek, String> valueColumn;
 
     private Wierzcholek poprzednioWybranyWierzcholek = null;
-    public void initialize()
-    {
+    public void initialize() throws IOException {
         Drzewo drzewo = new Drzewo();
-        GrafWczytajTxt grafWczytajTxt = new GrafWczytajTxt();
-        grafWczytajTxt.loadGraph("/Dane/drzewo_decyzyjne_1.txt", drzewo);
-
+//        GrafWczytajTxt grafWczytajTxt = new GrafWczytajTxt();
+//        grafWczytajTxt.loadGraph("/Dane/drzewo_decyzyjne_1.txt", drzewo);
+        GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
+        grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo);
         drzewo.getGraf().setAttribute("ui.stylesheet", "node { fill-color: red; size:25px; text-size: 12px; text-alignment:center; }" +
                 "edge { text-alignment:under; text-background-mode: plain; text-size: 12px; }");
 

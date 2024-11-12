@@ -50,11 +50,11 @@ public class Drzewo {
             dziecko.setRodzicId(rodzic.getId());
             rodzic.dodajDziecko(dziecko.getId());
 
-            System.out.println("Ustawiam rodzica: " + rodzic.getId() + " jako rodzica dla " + dziecko.getId());
+          //  System.out.println("Ustawiam rodzica: " + rodzic.getId() + " jako rodzica dla " + dziecko.getId());
         } else {
-            System.out.println("Nie znaleziono wierzchołków dla podanej krawędzi.");
+            //System.out.println("Nie znaleziono wierzchołków dla podanej krawędzi.");
         }
-
+        System.out.println(krawedz.getId()+ "   "+krawedz.getLabel());
     }
 
     public void edytujWierzcholek(Wierzcholek nowyWierzcholek, String idStaregoWierzcholka) {

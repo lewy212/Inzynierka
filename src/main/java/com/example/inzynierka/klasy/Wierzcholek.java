@@ -8,7 +8,9 @@ public class Wierzcholek {
     private String label;
     private String rodzicId; // Id rodzica
     private List<String> dzieciId; // Lista identyfikatorów dzieci
-
+    private Double pozX;
+    private Double pozY;
+    private Double roznica;
     private String wartosc;
 
 
@@ -63,4 +65,27 @@ public class Wierzcholek {
         this.wartosc = wartosc;
     }
 
+    public Double getPozX() {
+        return pozX;
+    }
+
+    public void setPozX(Double pozX) {
+        this.pozX = pozX;
+    }
+
+    public Double getPozY() {
+        return pozY;
+    }
+
+    public void setPozY(Double pozY) {
+        this.pozY = pozY;
+    }
+
+    public Double getRoznica() {
+        return roznica;
+    }
+
+    public void setRoznica(Double roznica) {
+        this.roznica = roznica;
+    }
 }
