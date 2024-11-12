@@ -5,6 +5,7 @@ import com.example.inzynierka.klasy.GrafWczytajTxt;
 import com.example.inzynierka.klasy.Json.GrafWczytajJson;
 import com.example.inzynierka.klasy.Krawedz;
 import com.example.inzynierka.klasy.Wierzcholek;
+import com.example.inzynierka.klasy.Xml.GrafWczytajXml;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +31,7 @@ import org.graphstream.ui.view.ViewerPipe;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.print.attribute.Attribute;
+import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -57,12 +59,14 @@ public class DrzewoController {
     private TableColumn<Wierzcholek, String> valueColumn;
 
     private Wierzcholek poprzednioWybranyWierzcholek = null;
-    public void initialize() throws IOException {
+    public void initialize() throws IOException, JAXBException {
         Drzewo drzewo = new Drzewo();
 //        GrafWczytajTxt grafWczytajTxt = new GrafWczytajTxt();
 //        grafWczytajTxt.loadGraph("/Dane/drzewo_decyzyjne_1.txt", drzewo);
-        GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
-        grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo);
+//        GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
+//        grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo);
+        GrafWczytajXml grafWczytajXml = new GrafWczytajXml();
+        grafWczytajXml.loadGraph("/Dane/decisionTree.xml",drzewo);
         drzewo.getGraf().setAttribute("ui.stylesheet", "node { fill-color: red; size:25px; text-size: 12px; text-alignment:center; }" +
                 "edge { text-alignment:under; text-background-mode: plain; text-size: 12px; }");
 

@@ -1,0 +1,127 @@
+<decisionTree>
+    <node>
+        <question>F1 &lt;= -0.104241</question>
+        <yes>
+            <question>F5 &lt;= 0.389369</question>
+            <yes>
+                <question>F9 &lt;= 0.235582</question>
+                <yes>
+                    <leaf>
+                        <decision>0 (A) (1434/911)</decision>
+                    </leaf>
+                </yes>
+                <no>
+                    <question>F4 &lt;= 1.0851</question>
+                    <yes>
+                        <question>F9 &lt;= 1.29575</question>
+                        <yes>
+                            <leaf>
+                                <decision>4 (E) (931/372)</decision>
+                            </leaf>
+                        </yes>
+                        <no>
+                            <leaf>
+                                <decision>10 (X) (94/27)</decision>
+                            </leaf>
+                        </no>
+                    </yes>
+                    <no>
+                        <leaf>
+                            <decision>10 (X) (346/126)</decision>
+                        </leaf>
+                    </no>
+                </no>
+            </yes>
+            <no>
+                <question>F9 &lt;= 1.73229</question>
+                <yes>
+                    <leaf>
+                        <decision>11 (Y) (208/45)</decision>
+                    </leaf>
+                </yes>
+                <no>
+                    <leaf>
+                        <decision>10 (X) (71/16)</decision>
+                    </leaf>
+                </no>
+            </no>
+        </yes>
+        <no>
+            <question>F3 &lt;= 0.267634</question>
+            <yes>
+                <question>F5 &lt;= 0.574541</question>
+                <yes>
+                    <leaf>
+                        <decision>0 (A) (3996/1512)</decision>
+                    </leaf>
+                </yes>
+                <no>
+                    <leaf>
+                        <decision>8 (I) (749/0)</decision>
+                    </leaf>
+                </no>
+            </yes>
+            <no>
+                <question>F5 &lt;= 0.389369</question>
+                <yes>
+                    <question>F10 &lt;= 0.549196</question>
+                    <yes>
+                        <question>F2 &lt;= -0.0360755</question>
+                        <yes>
+                            <question>F4 &lt;= -0.119683</question>
+                            <yes>
+                                <leaf>
+                                    <decision>5 (F) (610/228)</decision>
+                                </leaf>
+                            </yes>
+                            <no>
+                                <leaf>
+                                    <decision>0 (A) (839/270)</decision>
+                                </leaf>
+                            </no>
+                        </yes>
+                        <no>
+                            <question>F3 &lt;= 0.47924</question>
+                            <yes>
+                                <question>F4 &lt;= 0.415388</question>
+                                <yes>
+                                    <question>F5 &lt;= 0.210611</question>
+                                    <yes>
+                                        <leaf>
+                                            <decision>0 (A) (131/62)</decision>
+                                        </leaf>
+                                    </yes>
+                                    <no>
+                                        <leaf>
+                                            <decision>7 (H) (306/75)</decision>
+                                        </leaf>
+                                    </no>
+                                </yes>
+                                <no>
+                                    <leaf>
+                                        <decision>0 (A) (111/60)</decision>
+                                    </leaf>
+                                </no>
+                            </yes>
+                            <no>
+                                <leaf>
+                                    <decision>4 (E) (77/31)</decision>
+                                </leaf>
+                            </no>
+                        </no>
+                    </yes>
+                    <no>
+                        <leaf>
+                            <decision>0 (A) (475/184)</decision>
+                        </leaf>
+                    </no>
+                </yes>
+                <no>
+                    <leaf>
+                        <decision>11 (Y) (52/13)</decision>
+                    </leaf>
+                </no>
+            </no>
+        </no>
+    </node>
+</decisionTree>
