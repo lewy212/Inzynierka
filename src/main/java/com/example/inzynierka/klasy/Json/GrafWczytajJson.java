@@ -41,7 +41,7 @@ public class GrafWczytajJson {
             String idWierzcholka =  daneNazwy.getNazwa() + ".".repeat(obliczIleRazyTaSamaNazwa(daneNazwy.getNazwa()));
             wykorzystaneNazwy = Arrays.copyOf(wykorzystaneNazwy, wykorzystaneNazwy.length + 1);
             wykorzystaneNazwy[wykorzystaneNazwy.length-1]=daneNazwy.getNazwa();
-            Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwy.getNazwa());
+            Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwy.getNazwa(),daneNazwy.getNazwa()+" "+daneNazwy.getLabel());
             drzewo.dodajWierzcholek(wierzcholek);
             if(poprzedniWierzcholek==null)
             {
