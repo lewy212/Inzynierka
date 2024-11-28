@@ -44,6 +44,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.prefs.Preferences;
 
 public class DrzewoController {
     @FXML
@@ -78,19 +79,21 @@ public class DrzewoController {
     private Wierzcholek poprzednioWybranyWierzcholek = null;
     public void initialize() throws IOException, JAXBException {
         Drzewo drzewo = new Drzewo();
+        String shape = readShapeSetting();
+        System.out.println("TAKI SHAPE: "+shape);
 //        GrafWczytajTxt grafWczytajTxt = new GrafWczytajTxt();
 //        grafWczytajTxt.loadGraph("/Dane/drzewo_decyzyjne_1.txt", drzewo);
         GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
         grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo);
 //        GrafWczytajXml grafWczytajXml = new GrafWczytajXml();
 //        grafWczytajXml.loadGraph("/Dane/decisionTree.xml",drzewo);
-        drzewo.getGraf().setAttribute("ui.stylesheet","node { shape: box;text-alignment:center; text-offset: 4px, -4px; size-mode: fit; text-color: white;}");
+        drzewo.getGraf().setAttribute("ui.stylesheet"," node { shape: " + shape + ";text-alignment:center; text-offset: 4px, -4px; size-mode: fit; text-color: white; }");
 //        drzewo.getGraf().setAttribute("ui.stylesheet", "node { fill-color: red; shape: box; size:40px; text-size: 6px; text-alignment:center; }" +
 //                "edge { text-alignment:under; text-background-mode: plain; text-size: 12px; }");
-
+        ustawLiscie(drzewo);
         System.out.println(drzewo.getGraf().getNodeCount());
         String tekst = "";
-
+        zmienWyswietlenie(drzewo);
         nodeColumn.setCellValueFactory(new PropertyValueFactory<>("label")); // Zmieniamy na label wierzchołka
         parentColumn.setCellValueFactory(new PropertyValueFactory<>("rodzicId")); // Zmieniamy na rodzica
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("wartosc")); // Zmieniamy na wartość wierzchołka (jeśli to jest atrybut)
@@ -403,7 +406,7 @@ public class DrzewoController {
             drzewo.getGraf().getNode(poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: red;");
             drzewo.getGraf().getEdge(poprzednioWybranyWierzcholek.getRodzicId()+poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: black;");
         }
-        drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","fill-color: green;");
+        drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","shape: diamond; fill-color: green;");
         Edge edge = drzewo.getGraf().getEdge(wierzcholek.getRodzicId()+wierzcholek.getId());
         if(edge!=null)
         {
@@ -479,6 +482,7 @@ public class DrzewoController {
                             String aktualnaNazwa = wierzcholek.getFullLabel();
                             String[] parts = aktualnaNazwa.split(" (?=\\S)");
                             nazwa += parts[2];
+                            drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","padding: 20px;" );
                             break;
                         }
                     }
@@ -487,6 +491,20 @@ public class DrzewoController {
             node.setAttribute("ui.label",nazwa);
         }
     }
+    private String readShapeSetting() {
+        Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
+        return prefs.get("shapeWezlow", "box"); // "Średni" to wartość domyślna
+    }
+    private void ustawLiscie(Drzewo drzewo){
+        Graph graf = drzewo.getGraf();
+        for(Wierzcholek wierzcholek: drzewo.getListaWierzcholkow())
+        {
+            if(wierzcholek.getDzieciId().size()==0)
+            {
+                System.out.println("Ustawiam");
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","shape: diamond; padding: 10px;" );
+            }
+        }
 
-
+    }
 }
