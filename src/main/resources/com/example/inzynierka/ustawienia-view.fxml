@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" fx:controller="com.example.inzynierka.kontrolery.UstawieniaController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="619.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inzynierka.kontrolery.UstawieniaController">
    <children>
       <Label fx:id="ustawieniaLabel" text="Ustawienia">
          <font>
@@ -16,7 +16,7 @@
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin></Label>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
             <Label text="Kształt węzłów: ">
                <font>
@@ -40,6 +40,151 @@
          <VBox.margin>
             <Insets top="40.0" />
          </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Kształt lisci: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="shapeLisci" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="circle" />
+                     <String fx:value="box" />
+                     <String fx:value="rounded-box" />
+                     <String fx:value="diamond" />
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Liczba px: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Spinner fx:id="liczbaPx" editable="true" prefWidth="130.0">
+               <valueFactory>
+                  <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="5" max="100" min="1" />
+               </valueFactory>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </Spinner>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Kolor węzłów: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="kolorWezlow" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="red" />
+                     <String fx:value="blue" />
+                     <String fx:value="green" />
+                     <String fx:value="white" />
+                     <String fx:value="black" />
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Kolor lisci: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="kolorLisci" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="red" />
+                     <String fx:value="blue" />
+                     <String fx:value="green" />
+                     <String fx:value="white" />
+                     <String fx:value="black" />
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Obramowanie px: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Spinner fx:id="obramowaniePx" editable="true" prefWidth="130.0">
+               <valueFactory>
+                  <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="1" max="100" min="1" />
+               </valueFactory>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </Spinner>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Kolor Obramowania: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="kolorObramowania" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="red" />
+                     <String fx:value="blue" />
+                     <String fx:value="green" />
+                     <String fx:value="white" />
+                     <String fx:value="black" />
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Size mode: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="sizeMode" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="fit" />
+                     <String fx:value="normal" />
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
       </HBox>
       <Button fx:id="powrotButton" mnemonicParsing="false" onAction="#Powrot" text="Powrót">
          <font>

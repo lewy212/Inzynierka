@@ -52,8 +52,10 @@ public class GrafWczytajJson {
             }
             else
             {
+//                Krawedz krawedz = new Krawedz(poprzedniWierzcholek.getId()+wierzcholek.getId(),poprzedniWierzcholek.getId(),wierzcholek.getId()
+//                        ,odwrocZnak(poprzedniDaneNazwy.getLabel(),czyTak));
                 Krawedz krawedz = new Krawedz(poprzedniWierzcholek.getId()+wierzcholek.getId(),poprzedniWierzcholek.getId(),wierzcholek.getId()
-                        ,odwrocZnak(poprzedniDaneNazwy.getLabel(),czyTak));
+                        ,czyTak);
                 drzewo.dodajKrawedz(krawedz);
                 ustawPolozenieWierzcholka(wierzcholek,drzewo,czyTak,poprzedniWierzcholek);
                 poprzedniWierzcholek=wierzcholek;

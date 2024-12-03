@@ -1,17 +1,18 @@
 package com.example.inzynierka.kontrolery;
 
+import com.example.inzynierka.MainApplication;
 import com.example.inzynierka.klasy.Drzewo;
-import com.example.inzynierka.klasy.GrafWczytajTxt;
 import com.example.inzynierka.klasy.Json.GrafWczytajJson;
 import com.example.inzynierka.klasy.Krawedz;
 import com.example.inzynierka.klasy.Wierzcholek;
-import com.example.inzynierka.klasy.Xml.GrafWczytajXml;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
@@ -30,14 +31,12 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.stream.ProxyPipe;
 import org.graphstream.ui.fx_viewer.FxViewer;
-import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 
 import java.util.List;
 import javax.imageio.ImageIO;
-import javax.print.attribute.Attribute;
 import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -77,17 +76,19 @@ public class DrzewoController {
     @FXML private CheckBox checkBoxCondition;
 
     private Wierzcholek poprzednioWybranyWierzcholek = null;
+    private String shapeWezlow, shapeLisci,liczbaPx,kolorWezlow,kolorLisci,obramowaniePx,kolorObramowania;
     public void initialize() throws IOException, JAXBException {
         Drzewo drzewo = new Drzewo();
-        String shape = readShapeSetting();
-        System.out.println("TAKI SHAPE: "+shape);
+        readSetting();
+        System.out.println("TAKI SHAPE: "+ shapeWezlow);
+
 //        GrafWczytajTxt grafWczytajTxt = new GrafWczytajTxt();
 //        grafWczytajTxt.loadGraph("/Dane/drzewo_decyzyjne_1.txt", drzewo);
         GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
         grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo);
 //        GrafWczytajXml grafWczytajXml = new GrafWczytajXml();
 //        grafWczytajXml.loadGraph("/Dane/decisionTree.xml",drzewo);
-        drzewo.getGraf().setAttribute("ui.stylesheet"," node { shape: " + shape + ";text-alignment:center; text-offset: 4px, -4px; size-mode: fit; text-color: white; }");
+        drzewo.getGraf().setAttribute("ui.stylesheet"," node { shape: " + shapeWezlow + ";text-alignment:center; text-offset: 4px, -4px; size-mode: fit; size: 100px; text-color: white; fill-color: "+kolorWezlow+"; }");
 //        drzewo.getGraf().setAttribute("ui.stylesheet", "node { fill-color: red; shape: box; size:40px; text-size: 6px; text-alignment:center; }" +
 //                "edge { text-alignment:under; text-background-mode: plain; text-size: 12px; }");
         ustawLiscie(drzewo);
@@ -406,7 +407,7 @@ public class DrzewoController {
             drzewo.getGraf().getNode(poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: red;");
             drzewo.getGraf().getEdge(poprzednioWybranyWierzcholek.getRodzicId()+poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: black;");
         }
-        drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","shape: diamond; fill-color: green;");
+        drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","fill-color: green;");
         Edge edge = drzewo.getGraf().getEdge(wierzcholek.getRodzicId()+wierzcholek.getId());
         if(edge!=null)
         {
@@ -491,9 +492,14 @@ public class DrzewoController {
             node.setAttribute("ui.label",nazwa);
         }
     }
-    private String readShapeSetting() {
+    private void readSetting() {
         Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
-        return prefs.get("shapeWezlow", "box"); // "Średni" to wartość domyślna
+        shapeWezlow = prefs.get("shapeWezlow", "box");
+        shapeLisci = prefs.get("shapeLisci", "box");
+        kolorWezlow = prefs.get("kolorWezlow", "black");
+        kolorLisci =  prefs.get("kolorLisci", "black");
+        obramowaniePx = prefs.get("obramowaniePx", "1px");
+        kolorObramowania = prefs.get("obramowaniePx", "black");
     }
     private void ustawLiscie(Drzewo drzewo){
         Graph graf = drzewo.getGraf();
@@ -502,9 +508,20 @@ public class DrzewoController {
             if(wierzcholek.getDzieciId().size()==0)
             {
                 System.out.println("Ustawiam");
-                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","shape: diamond; padding: 10px;" );
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","shape: "+shapeLisci+"; padding: 10px; fill-color: " +kolorLisci+";" );
             }
         }
-
     }
+
+    @FXML
+    protected void Powrot() throws IOException {
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("menu-view.fxml"));
+        Parent root = loader.load();
+        Scene currentScene = borderPaneGlowny.getScene();
+        Stage stage = (Stage) currentScene.getWindow();
+        // root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        //WynikiModel.getInstance().getWyniki().add(new Wynik("GraczXD", savedDifficulty, 100));
+        stage.setScene(new Scene(root, currentScene.getWidth(), currentScene.getHeight()));
+    }
+
 }
