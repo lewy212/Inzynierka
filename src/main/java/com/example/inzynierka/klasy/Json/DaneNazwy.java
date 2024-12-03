@@ -18,7 +18,7 @@ public class DaneNazwy {
             String text = parts[1];
             text.substring(0,text.length()-1);
             this.nazwa = text;
-            this.label="";
+            this.label=parts[0]+" "+parts[2];
         }
     }
 

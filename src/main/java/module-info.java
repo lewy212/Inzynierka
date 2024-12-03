@@ -7,6 +7,7 @@ module com.example.inzynierka {
     requires javafx.swing;
     requires com.fasterxml.jackson.databind;
     requires java.xml.bind;
+    requires java.prefs;
 
     // Otwarcie pakietów dla JavaFX
     opens com.example.inzynierka to javafx.fxml; // Umożliwia dostęp dla JavaFX do kontrolerów

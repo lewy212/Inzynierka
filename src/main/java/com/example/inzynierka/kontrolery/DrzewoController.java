@@ -14,16 +14,23 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.stream.ProxyPipe;
 import org.graphstream.ui.fx_viewer.FxViewer;
+import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
@@ -37,18 +44,24 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.prefs.Preferences;
 
 public class DrzewoController {
     @FXML
     private BorderPane borderPaneGlowny;
+
+    @FXML
+    private VBox checkBoxMenu;
     @FXML
     private Button zapiszPng;
     @FXML
     private Button zapiszJpg;
-
+    @FXML
+    private VBox tableMenu;
     @FXML
     private Button pokazTabele;
-
+    @FXML
+    private Button pokazCheckBoxy;
     @FXML
     private TableView<Wierzcholek> tableView; // Zmieniamy typ na Wierzcholek
     @FXML
@@ -58,21 +71,29 @@ public class DrzewoController {
     @FXML
     private TableColumn<Wierzcholek, String> valueColumn;
 
+    @FXML private CheckBox checkBoxName;
+    @FXML private CheckBox checkBoxClass;
+    @FXML private CheckBox checkBoxAttempts;
+    @FXML private CheckBox checkBoxCondition;
+
     private Wierzcholek poprzednioWybranyWierzcholek = null;
     public void initialize() throws IOException, JAXBException {
         Drzewo drzewo = new Drzewo();
+        String shape = readShapeSetting();
+        System.out.println("TAKI SHAPE: "+shape);
 //        GrafWczytajTxt grafWczytajTxt = new GrafWczytajTxt();
 //        grafWczytajTxt.loadGraph("/Dane/drzewo_decyzyjne_1.txt", drzewo);
-//        GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
-//        grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo);
-        GrafWczytajXml grafWczytajXml = new GrafWczytajXml();
-        grafWczytajXml.loadGraph("/Dane/decisionTree.xml",drzewo);
-        drzewo.getGraf().setAttribute("ui.stylesheet", "node { fill-color: red; size:25px; text-size: 12px; text-alignment:center; }" +
-                "edge { text-alignment:under; text-background-mode: plain; text-size: 12px; }");
-
+        GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
+        grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo);
+//        GrafWczytajXml grafWczytajXml = new GrafWczytajXml();
+//        grafWczytajXml.loadGraph("/Dane/decisionTree.xml",drzewo);
+        drzewo.getGraf().setAttribute("ui.stylesheet"," node { shape: " + shape + ";text-alignment:center; text-offset: 4px, -4px; size-mode: fit; text-color: white; }");
+//        drzewo.getGraf().setAttribute("ui.stylesheet", "node { fill-color: red; shape: box; size:40px; text-size: 6px; text-alignment:center; }" +
+//                "edge { text-alignment:under; text-background-mode: plain; text-size: 12px; }");
+        ustawLiscie(drzewo);
         System.out.println(drzewo.getGraf().getNodeCount());
         String tekst = "";
-
+        zmienWyswietlenie(drzewo);
         nodeColumn.setCellValueFactory(new PropertyValueFactory<>("label")); // Zmieniamy na label wierzchołka
         parentColumn.setCellValueFactory(new PropertyValueFactory<>("rodzicId")); // Zmieniamy na rodzica
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("wartosc")); // Zmieniamy na wartość wierzchołka (jeśli to jest atrybut)
@@ -139,13 +160,14 @@ public class DrzewoController {
             tekst = tekst + drzewo.getGraf().getNode(i).getId() + " ";
         }
         drzewo.getGraf().getNode(0).setAttribute("xy", 0, 0);
-        System.out.println(tekst);
 
         Viewer viewer = new FxViewer(drzewo.getGraf(), Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-
         Parent graphView = (Parent) viewer.addDefaultView(true);
+
         // Przetwarzanie kliknięć węzłów
         ViewerPipe pipe = viewer.newViewerPipe();
+        ProxyPipe pipe2 = viewer.newViewerPipe();
+        pipe2.addAttributeSink(drzewo.getGraf());
         pipe.addViewerListener(new ViewerListener() {
             @Override
             public void viewClosed(String viewName) {
@@ -155,11 +177,7 @@ public class DrzewoController {
             @Override
             public void buttonPushed(String id) {
                 Platform.runLater(() -> {
-                    Edge edge=drzewo.getGraf().getEdge("F1F5");
 
-                    System.out.println(edge.getId()+""+edge.getAttribute("ui.label").toString());
-
-                    // Sprawdzamy, czy kliknięto na węzeł czy na krawędź
                     if (drzewo.getGraf().getEdge(id) != null) {
                         // Jeśli istnieje krawędź o danym ID
                         System.out.println("Kliknięto krawędź: " + id);
@@ -193,6 +211,7 @@ public class DrzewoController {
         new Thread(() -> {
             while (true) {
                 pipe.pump();
+                pipe2.pump();
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -240,62 +259,125 @@ public class DrzewoController {
                 }
             }
         });
-        pokazTabele.setOnAction(event -> {
-            tableView.setVisible(!tableView.isVisible());
+        pokazCheckBoxy.setOnAction(event -> {
+            checkBoxMenu.setVisible(!checkBoxMenu.isVisible());
+            tableMenu.setVisible(false);
+            System.out.println("klikam");
         });
+        pokazTabele.setOnAction(event -> {
+            tableMenu.setVisible(!tableMenu.isVisible());
+            checkBoxMenu.setVisible(false);
+        });
+        checkBoxName.setOnAction(e -> zmienWyswietlenie(drzewo));
+        checkBoxAttempts.setOnAction(e -> zmienWyswietlenie(drzewo));
+        checkBoxClass.setOnAction(e -> zmienWyswietlenie(drzewo));
+        checkBoxCondition.setOnAction(e -> zmienWyswietlenie(drzewo));
 
     }
     // Metoda do usuwania kropek z końca tekstu
-    private void zmienWierzcholek2(Drzewo drzewo,String nodeId)
-    {
+    private void zmienWierzcholek2(Drzewo drzewo, String nodeId) {
         Node originalNode = drzewo.getGraf().getNode(nodeId);
+        Wierzcholek wierzcholek = null;
+        for(Wierzcholek wierzcholek2 : drzewo.getListaWierzcholkow())
+        {
+            if (wierzcholek2.getId().equals(nodeId))
+            {
+                wierzcholek=wierzcholek2;
+            }
+        }
         if (originalNode != null) {
-            // Tworzymy dialog do wprowadzenia nowej nazwy
-            TextInputDialog dialog = new TextInputDialog(nodeId);
-            dialog.setTitle("Zmiana nazwy węzła");
-            dialog.setHeaderText("Zmień nazwę węzła");
-            dialog.setContentText("Wprowadź nową nazwę dla węzła:");
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Zmiana danych węzła");
+            dialog.setHeaderText("Zmiana danych węzła");
+            
+            VBox vbox = new VBox();
+            vbox.setSpacing(10);
+            
+            TextField field1 = new TextField();
+            field1.setPromptText("Wprowadź nową nazwę węzła");
+            field1.setText(nodeId);  
 
-            // Wyświetlamy dialog i czekamy na wynik
-            dialog.showAndWait().ifPresent(newId -> {
-                if (!newId.trim().isEmpty() && drzewo.getGraf().getNode(newId) == null) {
-                    // zmienWierzcholek(drzewo,newId,originalNode,nodeId);
-                    // Sprawdź, czy nowy węzeł już istnieje
-                    System.out.println("Zmieniono ID węzła na: " + newId);
+            TextField field2 = new TextField();
+            String[] parts = wierzcholek.getFullLabel().split(" (?=\\S)");
+            field2.setText(parts[1]+" "+parts[2]);
+            if(wierzcholek.getDzieciId().size()>0)
+            {
+                vbox.getChildren().addAll(new Label("Nazwa węzła:"), field1, new Label("Podaj warunek: "), field2);
+            }
+            else
+            {
+                vbox.getChildren().addAll(new Label("Nazwa węzła:"), field1, new Label("Podaj klasę i liczbę prób: "), field2);
+            }
 
-                    // Utwórz nowy węzeł z nowym ID
-                    Node newNode = drzewo.getGraf().addNode(newId);
-                    Wierzcholek nowyWierzcholek = new Wierzcholek(newId,newId);
-                    // Skopiuj atrybuty ze starego węzła
-                    originalNode.attributeKeys().forEach(key -> {
-                        if (!"ui.label".equals(key)) {
-                            Object value = originalNode.getAttribute(key);
-                            newNode.setAttribute(key, value);
-                        }
-                    });
-                    newNode.setAttribute("ui.label",newId);
-                    // Przenieś krawędzie
-                    originalNode.edges().forEach(edge -> {
-                        if (Objects.equals(edge.getSourceNode(), originalNode)) {
-                            // Krawędź wychodząca
-                            Krawedz krawedz = new Krawedz(newId + edge.getTargetNode().getId(), newId,
-                                    edge.getTargetNode().getId(), edge.getAttribute("ui.label").toString());
-                            drzewo.dodajKrawedz(krawedz);
+
+
+            dialog.getDialogPane().setContent(vbox);
+
+            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+            Wierzcholek finalWierzcholek = wierzcholek;
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == okButtonType) {
+                    String newId = field1.getText().trim();
+                    String newLabel = field2.getText().trim();
+                    // Sprawdzamy czy nowy ID nie jest pusty i czy nie istnieje już w grafie
+                    if(finalWierzcholek.getId().equals(newId))
+                    {
+                        finalWierzcholek.setFullLabel(usunKropki(finalWierzcholek.getId())+" "+field2.getText().trim());
+
+                    }
+                    else
+                    {
+                        if (!newId.isEmpty() && drzewo.getGraf().getNode(newId) == null) {
+
+                            // Zmieniamy nazwę węzła
+                            System.out.println("Zmieniono ID węzła na: " + newId);
+
+                            // Utwórz nowy węzeł z nowym ID
+                            Node newNode = drzewo.getGraf().addNode(newId);
+                            Wierzcholek nowyWierzcholek = new Wierzcholek(newId, newId,newId +" " +field2.getText().trim());
+
+                            // Skopiuj atrybuty ze starego węzła
+                            originalNode.attributeKeys().forEach(key -> {
+                                if (!"ui.label".equals(key)) {
+                                    Object value = originalNode.getAttribute(key);
+                                    newNode.setAttribute(key, value);
+                                }
+                            });
+                            newNode.setAttribute("ui.label", newId);
+
+                            // Przenieś krawędzie
+                            originalNode.edges().forEach(edge -> {
+                                if (Objects.equals(edge.getSourceNode(), originalNode)) {
+                                    // Krawędź wychodząca
+                                    Krawedz krawedz = new Krawedz(newId + edge.getTargetNode().getId(), newId,
+                                            edge.getTargetNode().getId(), edge.getAttribute("ui.label").toString());
+                                    drzewo.dodajKrawedz(krawedz);
+                                } else {
+                                    // Krawędź przychodząca
+                                    String sourceId = edge.getSourceNode().getId();
+                                    Krawedz krawedz = new Krawedz(sourceId + newId, sourceId, newId, edge.getAttribute("ui.label").toString());
+                                    drzewo.dodajKrawedz(krawedz);
+                                }
+                            });
+
+                            drzewo.edytujWierzcholek(nowyWierzcholek, nodeId);
+
+                            // Usuwamy oryginalny węzeł
+                            drzewo.getGraf().removeNode(nodeId);
+                            tableView.refresh();
                         } else {
-                            // Krawędź przychodząca
-                            String sourceId = edge.getSourceNode().getId();
-                            Krawedz krawedz = new Krawedz(sourceId + newId, sourceId, newId, edge.getAttribute("ui.label").toString());
-                            drzewo.dodajKrawedz(krawedz);
+                            System.out.println("Węzeł o ID " + newId + " już istnieje lub ID jest puste.");
                         }
-                    });
-                    drzewo.edytujWierzcholek(nowyWierzcholek, nodeId);
-
-                    drzewo.getGraf().removeNode(nodeId);
-                    tableView.refresh();
-                } else {
-                    System.out.println("Węzeł o ID " + newId + " już istnieje lub ID jest puste.");
+                    }
+                    zmienWyswietlenie(drzewo);
                 }
+                return null;
             });
+
+            // Wyświetlamy dialog
+            dialog.showAndWait();
         } else {
             System.out.println("Nie znaleziono węzła o ID: " + nodeId);
         }
@@ -324,7 +406,7 @@ public class DrzewoController {
             drzewo.getGraf().getNode(poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: red;");
             drzewo.getGraf().getEdge(poprzednioWybranyWierzcholek.getRodzicId()+poprzednioWybranyWierzcholek.getId()).setAttribute("ui.style","fill-color: black;");
         }
-        drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","fill-color: green;");
+        drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","shape: diamond; fill-color: green;");
         Edge edge = drzewo.getGraf().getEdge(wierzcholek.getRodzicId()+wierzcholek.getId());
         if(edge!=null)
         {
@@ -337,7 +419,92 @@ public class DrzewoController {
         }
         return nazwa;
     }
+    private void zmienWyswietlenie(Drzewo drzewo)
+    {
+        Graph graph = drzewo.getGraf();
+        List<Wierzcholek> listaWierzcholkow  = drzewo.getListaWierzcholkow();
+        for(Node node : drzewo.getGraf())
+        {
+            String nazwa ="";
+            if(checkBoxName.isSelected())
+            {
+                for(Wierzcholek wierzcholek: listaWierzcholkow)
+                {
+                    if(wierzcholek.getId().equals(node.getId()))
+                    {
+                        String aktualnaNazwa = wierzcholek.getFullLabel();
+                        String[] parts = aktualnaNazwa.split(" (?=\\S)");
+                        nazwa = parts[0]+" ";
+                        break;
+                    }
+                }
+            }
+            if(checkBoxClass.isSelected())
+            {
+                for(Wierzcholek wierzcholek: listaWierzcholkow)
+                {
+                    if(wierzcholek.getDzieciId().size()==0)
+                    {
+                        if(wierzcholek.getId().equals(node.getId()))
+                        {
+                            String aktualnaNazwa = wierzcholek.getFullLabel();
+                            String[] parts = aktualnaNazwa.split(" (?=\\S)");
+                            nazwa += parts[1]+" ";
+                            break;
+                        }
+                    }
+                }
+            }
+            if(checkBoxCondition.isSelected())
+            {
+                for(Wierzcholek wierzcholek: listaWierzcholkow)
+                {
+                    if(wierzcholek.getDzieciId().size()>0)
+                    {
+                        if(wierzcholek.getId().equals(node.getId()))
+                        {
+                            String aktualnaNazwa = wierzcholek.getFullLabel();
+                            String[] parts = aktualnaNazwa.split(" (?=\\S)");
+                            nazwa += parts[1]+" "+parts[2];
+                            break;
+                        }
+                    }
+                }
+            }
+            if(checkBoxAttempts.isSelected())
+            {
+                for(Wierzcholek wierzcholek: listaWierzcholkow)
+                {
+                    if(wierzcholek.getDzieciId().size()==0)
+                    {
+                        if(wierzcholek.getId().equals(node.getId()))
+                        {
+                            String aktualnaNazwa = wierzcholek.getFullLabel();
+                            String[] parts = aktualnaNazwa.split(" (?=\\S)");
+                            nazwa += parts[2];
+                            drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","padding: 20px;" );
+                            break;
+                        }
+                    }
+                }
+            }
+            node.setAttribute("ui.label",nazwa);
+        }
+    }
+    private String readShapeSetting() {
+        Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
+        return prefs.get("shapeWezlow", "box"); // "Średni" to wartość domyślna
+    }
+    private void ustawLiscie(Drzewo drzewo){
+        Graph graf = drzewo.getGraf();
+        for(Wierzcholek wierzcholek: drzewo.getListaWierzcholkow())
+        {
+            if(wierzcholek.getDzieciId().size()==0)
+            {
+                System.out.println("Ustawiam");
+                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("ui.style","shape: diamond; padding: 10px;" );
+            }
+        }
 
-
-
+    }
 }

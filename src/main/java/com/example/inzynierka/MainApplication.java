@@ -21,8 +21,8 @@ public class MainApplication extends Application {
 
         // Inicjalizowanie ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
-        GrafWczytajXml grafWczytajXml = new GrafWczytajXml();
-        grafWczytajXml.loadGraph("/Dane/decisionTree.xml",new Drzewo());
+      //  GrafWczytajXml grafWczytajXml = new GrafWczytajXml();
+    //    grafWczytajXml.loadGraph("/Dane/decisionTree.xml",new Drzewo());
         // Wczytanie JSON z pliku do obiektu DecisionTree
         // InputStream inputStream = getClass().getResourceAsStream("/Dane/drzewo_decyzyjne_json.json");
         //  JsonDrzewo rootNode = objectMapper.readValue(inputStream, JsonDrzewo.class);
@@ -31,8 +31,9 @@ public class MainApplication extends Application {
         // Wyświetlanie wyników
         // printDecisionTree(rootNode, 0);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("drzewo-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("menu-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1600, 900);
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }

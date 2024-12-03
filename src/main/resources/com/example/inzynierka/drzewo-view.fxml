@@ -3,26 +3,37 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="borderPaneGlowny" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inzynierka.kontrolery.DrzewoController">
+<BorderPane fx:id="borderPaneGlowny" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inzynierka.kontrolery.DrzewoController">
    <right>
-      <!-- Tabela ukryta na początku -->
-      <TableView fx:id="tableView" visible="false">
-         <columns>
-            <TableColumn fx:id="nodeColumn" text="Wierzchołek"/>
-            <TableColumn fx:id="parentColumn" text="Rodzic"/>
-            <TableColumn fx:id="valueColumn" text="Wartość"/>
-         </columns>
-      </TableView>
+      <!-- StackPane pozwala na nałożenie widoków na siebie -->
+      <StackPane fx:id="contentPane">
+         <!-- Menu z checkboxami -->
+         <VBox fx:id="checkBoxMenu" maxHeight="Infinity" prefWidth="186.0" spacing="10" visible="false" VBox.vgrow="ALWAYS">
+            <CheckBox fx:id="checkBoxName" mnemonicParsing="false" selected="true" text="Nazwa" />
+            <CheckBox fx:id="checkBoxClass" mnemonicParsing="false" text="Klasa" />
+            <CheckBox fx:id="checkBoxAttempts" mnemonicParsing="false" text="Liczba prób" />
+            <CheckBox fx:id="checkBoxCondition" mnemonicParsing="false" text="Warunek" />
+         </VBox>
+
+         <!-- Tabela ukryta na początku -->
+         <VBox fx:id="tableMenu" maxHeight="Infinity" maxWidth="Infinity" visible="false" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tableView" maxHeight="Infinity" maxWidth="Infinity" prefHeight="2000.0" prefWidth="250">
+               <columns>
+                  <TableColumn fx:id="nodeColumn" text="Wierzchołek" />
+                  <TableColumn fx:id="parentColumn" text="Rodzic" />
+                  <TableColumn fx:id="valueColumn" text="Wartość" />
+               </columns>
+            </TableView>
+         </VBox>
+      </StackPane>
    </right>
+
    <bottom>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="21.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="pokazTabele" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Pokaz Tabele" />
-         </children>
-         <children>
+            <Button fx:id="pokazCheckBoxy" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Pokaz Checkboxy" />
             <Button fx:id="zapiszJpg" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Zapisz jpg" />
-         </children>
-         <children>
             <Button fx:id="zapiszPng" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Zapisz png" />
          </children>
       </HBox>

@@ -21,7 +21,7 @@ public class Drzewo {
     }
 
     public void dodajWierzcholek(Wierzcholek wierzcholek) {
-        graf.addNode(wierzcholek.getId()).setAttribute("ui.label", wierzcholek.getLabel());
+        graf.addNode(wierzcholek.getId()).setAttribute("ui.label", wierzcholek.getFullLabel());
         listaWierzcholkow.add(wierzcholek);
     }
 
@@ -70,6 +70,7 @@ public class Drzewo {
             System.out.println("edytuje");
             // Zaktualizuj istniejący wierzchołek bez jego usuwania z listy
             staryWierzcholek.setLabel(nowyWierzcholek.getLabel());
+            staryWierzcholek.setFullLabel(nowyWierzcholek.getFullLabel());
             // Aktualizujemy dzieci
             List<String> stareDzieci = staryWierzcholek.getDzieciId();
 

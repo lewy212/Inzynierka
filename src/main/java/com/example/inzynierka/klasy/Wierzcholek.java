@@ -6,6 +6,7 @@ import java.util.List;
 public class Wierzcholek {
     private String id;
     private String label;
+    private String fullLabel;
     private String rodzicId; // Id rodzica
     private List<String> dzieciId; // Lista identyfikatorów dzieci
     private Double pozX;
@@ -17,6 +18,13 @@ public class Wierzcholek {
     public Wierzcholek(String id, String label) {
         this.id = id;
         this.label = label;
+        this.rodzicId = null; // Domyślnie brak rodzica
+        this.dzieciId = new ArrayList<>(); // Inicjalizacja listy dzieci
+    }
+    public Wierzcholek(String id, String label,String fullLabel) {
+        this.id = id;
+        this.label = label;
+        this.fullLabel = fullLabel;
         this.rodzicId = null; // Domyślnie brak rodzica
         this.dzieciId = new ArrayList<>(); // Inicjalizacja listy dzieci
     }
@@ -35,6 +43,8 @@ public class Wierzcholek {
 
     public void setLabel(String label) {
         this.label = label;
+        String[] tekst  = this.fullLabel.split(" (?=\\S)");
+        this.fullLabel = label+ " " + tekst[1]+ " " + tekst[2];
     }
 
     public String getRodzicId() {
@@ -87,5 +97,13 @@ public class Wierzcholek {
 
     public void setRoznica(Double roznica) {
         this.roznica = roznica;
+    }
+
+    public String getFullLabel() {
+        return fullLabel;
+    }
+
+    public void setFullLabel(String fullLabel) {
+        this.fullLabel = fullLabel;
     }
 }
