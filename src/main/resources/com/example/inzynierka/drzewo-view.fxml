@@ -32,6 +32,7 @@
       <HBox alignment="BOTTOM_RIGHT" prefHeight="21.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="powrot" alignment="CENTER" mnemonicParsing="false" onAction="#Powrot" prefHeight="25.0" prefWidth="100.0" text="Wroc do menu" />
+            <Button fx:id="zapiszSvg" alignment="CENTER" mnemonicParsing="false" onAction="#Powrot" prefHeight="25.0" prefWidth="100.0" text="Zapisz svg" />
             <Button fx:id="pokazTabele" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Pokaz Tabele" />
             <Button fx:id="pokazCheckBoxy" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Pokaz Checkboxy" />
             <Button fx:id="zapiszJpg" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Zapisz jpg" />

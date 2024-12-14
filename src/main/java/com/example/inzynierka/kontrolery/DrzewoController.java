@@ -31,9 +31,12 @@ import javafx.util.Callback;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.stream.ProxyPipe;
 import org.graphstream.stream.file.FileSinkSVG;
 import org.graphstream.ui.fx_viewer.FxViewer;
+import org.graphstream.ui.graphicGraph.GraphicGraph;
+import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
@@ -64,6 +67,8 @@ public class DrzewoController {
     private Button pokazTabele;
     @FXML
     private Button pokazCheckBoxy;
+    @FXML
+    private Button zapiszSvg;
     @FXML
     private TableView<Wierzcholek> tableView; // Zmieniamy typ na Wierzcholek
     @FXML
@@ -166,7 +171,16 @@ public class DrzewoController {
         for (int i = 0; i < drzewo.getGraf().getNodeCount(); i++) {
             tekst = tekst + drzewo.getGraf().getNode(i).getId() + " ";
         }
-        drzewo.getGraf().getNode(0).setAttribute("xy", 0, 0);
+        double a = 0;
+        drzewo.getGraf().getNode(0).setAttribute("xy", new double[]{0.0, 0.0});
+
+        Object obj = drzewo.getGraf().getNode(0).getAttribute("xy");
+        if (obj instanceof double[]) {
+            double[] position = (double[]) obj;
+            System.out.println("Pozycja pierwszego elementu: x=" + position[0] + ", y=" + position[1]);
+        } else {
+            System.out.println("Brak pozycji dla węzła lub błąd w typie atrybutu.");
+        }
 
         Viewer viewer = new FxViewer(drzewo.getGraf(), Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         Parent graphView = (Parent) viewer.addDefaultView(true);
@@ -174,6 +188,7 @@ public class DrzewoController {
         ViewerPipe pipe = viewer.newViewerPipe();
         ProxyPipe pipe2 = viewer.newViewerPipe();
         pipe2.addAttributeSink(drzewo.getGraf());
+
         pipe.addViewerListener(new ViewerListener() {
             @Override
             public void viewClosed(String viewName) {
@@ -270,6 +285,50 @@ public class DrzewoController {
             tableMenu.setVisible(false);
             System.out.println("klikam");
         });
+        zapiszSvg.setOnAction(event -> {
+            FileSinkSVG fileSink = new FileSinkSVG();
+            try {
+                Graph graph  = drzewo.getGraf();
+                String currentStylesheet = drzewo.getGraf().getAttribute("ui.stylesheet", String.class);
+                Object obj1 = drzewo.getGraf().getNode(0).getAttribute("xy");
+                if (obj1 instanceof double[]) {
+                    double[] position = (double[]) obj1;
+                    System.out.println("Pozycja pierwszego elementu: x=" + position[0] + ", y=" + position[1]);
+                } else {
+                    System.out.println("Brak pozycji dla węzła lub błąd w typie atrybutu.");
+                }
+
+// Jeśli brak istniejącego arkusza stylów, inicjalizujemy go
+                if (currentStylesheet == null) {
+                    currentStylesheet = "";
+                }
+
+// Dodajemy lub modyfikujemy styl dla węzłów (node)
+                String additionalStyle = "node { size: 90px,15px; }";
+
+// Łączymy nowy styl z istniejącym
+                String updatedStylesheet = currentStylesheet + " " + additionalStyle;
+
+// Ustawiamy nowy arkusz stylów w grafie
+                drzewo.getGraf().setAttribute("ui.stylesheet", updatedStylesheet);
+                graph.getNode(0).setAttribute("xy", 1000,100);
+                System.out.println("Zaktualizowany arkusz stylów: " + drzewo.getGraf().getAttribute("ui.stylesheet", String.class));
+                //drzewo.getGraf().getNode(0).setAttribute("ui.style", "size: 1000;");
+                Object positionObj = drzewo.getGraf().getNode(0).getAttribute("xy");
+
+                // Jeżeli atrybut "xy" istnieje, sprawdzamy jego typ
+                if (positionObj != null) {
+                    System.out.println("Atrybut 'xy' węzła " + drzewo.getGraf().getNode(0).getId() + ": " + positionObj.toString());
+                } else {
+                    System.out.println("Brak atrybutu 'xy' dla węzła " + drzewo.getGraf().getNode(0).getId());
+                }
+                fileSink.writeAll(graph, "output_graph.svg");
+
+                System.out.println("Graf został zapisany jako SVG: output_graph.svg");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         pokazTabele.setOnAction(event -> {
             tableMenu.setVisible(!tableMenu.isVisible());
             checkBoxMenu.setVisible(false);
@@ -278,15 +337,9 @@ public class DrzewoController {
         checkBoxAttempts.setOnAction(e -> zmienWyswietlenie(drzewo));
         checkBoxClass.setOnAction(e -> zmienWyswietlenie(drzewo));
         checkBoxCondition.setOnAction(e -> zmienWyswietlenie(drzewo));
-        FileSinkSVG fileSink = new FileSinkSVG();
-        try {
-            fileSink.writeAll(drzewo.getGraf(), "output_graph.svg");
-            System.out.println("Graf został zapisany jako SVG: output_graph.svg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
-    // Metoda do usuwania kropek z końca tekstu
+
     private void zmienWierzcholek2(Drzewo drzewo, String nodeId) {
         Node originalNode = drzewo.getGraf().getNode(nodeId);
         Wierzcholek wierzcholek = null;
@@ -352,12 +405,12 @@ public class DrzewoController {
 
                             // Skopiuj atrybuty ze starego węzła
                             originalNode.attributeKeys().forEach(key -> {
-                                if (!"ui.label".equals(key)) {
+                                if (!"label".equals(key)) {
                                     Object value = originalNode.getAttribute(key);
                                     newNode.setAttribute(key, value);
                                 }
                             });
-                            newNode.setAttribute("ui.label", newId);
+                            newNode.setAttribute("label", newId);
 
                             // Przenieś krawędzie
                             originalNode.edges().forEach(edge -> {
@@ -513,7 +566,7 @@ public class DrzewoController {
                     }
                 }
             }
-            node.setAttribute("ui.label",nazwa);
+            node.setAttribute("label",nazwa);
         }
     }
     private void readSetting() {

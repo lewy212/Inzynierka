@@ -21,7 +21,7 @@ public class Drzewo {
     }
 
     public void dodajWierzcholek(Wierzcholek wierzcholek) {
-        graf.addNode(wierzcholek.getId()).setAttribute("ui.label", wierzcholek.getFullLabel());
+        graf.addNode(wierzcholek.getId()).setAttribute("label", wierzcholek.getFullLabel());
         listaWierzcholkow.add(wierzcholek);
     }
 
