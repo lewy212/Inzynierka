@@ -6,6 +6,7 @@ import com.example.inzynierka.klasy.Wierzcholek;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.graphstream.graph.Edge;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -20,10 +21,17 @@ public class GrafWczytajJson {
         this.roznica = 0.0;
     }
 
-    public void loadGraph(String filepath, Drzewo drzewo) throws IOException {
+    public void loadGraph(String filePath, Drzewo drzewo,boolean czyPrzykladowy) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-
-        InputStream inputStream = getClass().getResourceAsStream(filepath);
+        InputStream inputStream = null;
+        if(czyPrzykladowy)
+        {
+            inputStream = getClass().getResourceAsStream(filePath);
+        }
+        else
+        {
+            inputStream = new FileInputStream(filePath);
+        }
         JsonDrzewo drzewoJson = objectMapper.readValue(inputStream, JsonDrzewo.class);
         Drzewo noweDrzewo = przypiszDane(drzewoJson,drzewo,null,null,null);
         for(Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow())

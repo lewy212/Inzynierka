@@ -34,6 +34,12 @@ public class UstawieniaController {
     @FXML
     private ChoiceBox<String> sizeMode;
     @FXML
+    private ChoiceBox<String> kolorTekstu;
+    @FXML
+    private ChoiceBox<String> kolorWyboranegoElementu;
+    @FXML
+    private ChoiceBox<String> kolorKrawedzi;
+    @FXML
     protected void Powrot() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("menu-view.fxml"));
         Parent root = loader.load();
@@ -54,6 +60,9 @@ public class UstawieniaController {
         kolorLisci.setValue("black");
         kolorObramowania.setValue("black");
         sizeMode.setValue("fit");
+        kolorTekstu.setValue("black");
+        kolorWyboranegoElementu.setValue("red");
+        kolorKrawedzi.setValue("black");
         // Wczytanie zapisanej wartości
         loadSettings();
     }
@@ -67,6 +76,8 @@ public class UstawieniaController {
         prefs.put("obramowaniePx",String.valueOf(obramowaniePx.getValue()));
         prefs.put("kolorObramowania", kolorObramowania.getValue());
         prefs.put("sizeMode", sizeMode.getValue());
+        prefs.put("kolorTekstu", kolorTekstu.getValue());
+        prefs.put("kolorWyboranegoElementu", kolorWyboranegoElementu.getValue());
     }
     private void loadSettings() {
         Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
@@ -108,6 +119,14 @@ public class UstawieniaController {
         String sizeModePrefs = prefs.get("sizeMode", null);
         if (sizeModePrefs != null) {
             sizeMode.setValue(sizeModePrefs);
+        }
+        String kolorTekstuPrefs = prefs.get("kolorTekstu", null);
+        if (kolorTekstuPrefs != null) {
+            kolorTekstu.setValue(kolorTekstuPrefs);
+        }
+        String kolorWyboranegoElementuPrefs = prefs.get("kolorWyboranegoElementu", null);
+        if (kolorWyboranegoElementuPrefs != null) {
+            kolorWyboranegoElementu.setValue(kolorWyboranegoElementuPrefs);
         }
     }
 }

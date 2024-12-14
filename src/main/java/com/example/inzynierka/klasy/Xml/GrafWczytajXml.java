@@ -9,6 +9,8 @@ import com.example.inzynierka.klasy.Wierzcholek;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
 
@@ -20,26 +22,45 @@ public class GrafWczytajXml {
         this.wykorzystaneNazwy = new String[0];
 
     }
-    public void loadGraph(String filePath, Drzewo drzewo) throws JAXBException {
+    public void loadGraph(String filePath, Drzewo drzewo,boolean czyPrzykladowy) throws JAXBException {
 
         JAXBContext context = JAXBContext.newInstance(XmlDrzewo.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
+        if(czyPrzykladowy)
+        {
+            try (InputStream inputStream = getClass().getResourceAsStream(filePath)) {
+                if (inputStream == null) {
+                    throw new IllegalArgumentException("Plik nie został znaleziony w zasobach: " + filePath);
+                }
+                XmlDrzewo drzewoXml = (XmlDrzewo) unmarshaller.unmarshal(inputStream);
+                // Przypisanie danych do obiektu Drzewo
+                Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null);
 
-        try (InputStream inputStream = getClass().getResourceAsStream(filePath)) {
-            if (inputStream == null) {
-                throw new IllegalArgumentException("Plik nie został znaleziony w zasobach: " + filePath);
+                for (Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow()) {
+                    System.out.println(wierzcholek.getId() + "   " + wierzcholek.getLabel());
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException("Błąd podczas wczytywania pliku XML: " + filePath, e);
             }
-            XmlDrzewo drzewoXml = (XmlDrzewo) unmarshaller.unmarshal(inputStream);
-            // Przypisanie danych do obiektu Drzewo
-            Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null);
-
-            for (Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow()) {
-                System.out.println(wierzcholek.getId() + "   " + wierzcholek.getLabel());
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException("Błąd podczas wczytywania pliku XML: " + filePath, e);
         }
+        else
+        {
+            try (InputStream inputStream = new FileInputStream(filePath)) {
+                XmlDrzewo drzewoXml = (XmlDrzewo) unmarshaller.unmarshal(inputStream);
+                Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null);
+
+                for (Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow()) {
+                    System.out.println(wierzcholek.getId() + "   " + wierzcholek.getLabel());
+                }
+
+            } catch (FileNotFoundException e) {
+                throw new IllegalArgumentException("Plik nie został znaleziony: " + filePath, e);
+            } catch (Exception e) {
+                throw new RuntimeException("Błąd podczas wczytywania pliku XML: " + filePath, e);
+            }
+        }
+
     }
 
     private Drzewo przypiszDane(Wezel node, Drzewo drzewo, Wierzcholek poprzedniWierzcholek, DaneNazwyXml poprzedniDaneNazwy, String czyTak)
@@ -50,7 +71,7 @@ public class GrafWczytajXml {
            String idWierzcholka =  daneNazwyXml.getNazwa() + ".".repeat(obliczIleRazyTaSamaNazwa(daneNazwyXml.getNazwa()));
            wykorzystaneNazwy = Arrays.copyOf(wykorzystaneNazwy, wykorzystaneNazwy.length + 1);
            wykorzystaneNazwy[wykorzystaneNazwy.length-1]=daneNazwyXml.getNazwa();
-           Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwyXml.getNazwa());
+           Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwyXml.getNazwa(), daneNazwyXml.getNazwa()+" "+daneNazwyXml.getLabel());
            drzewo.dodajWierzcholek(wierzcholek);
            if (poprzedniWierzcholek==null)
            {
@@ -62,7 +83,7 @@ public class GrafWczytajXml {
            else
            {
                Krawedz krawedz = new Krawedz(poprzedniWierzcholek.getId()+wierzcholek.getId(),poprzedniWierzcholek.getId(),wierzcholek.getId()
-                       ,odwrocZnak(poprzedniDaneNazwy.getLabel(),czyTak));
+                       ,czyTak);
                drzewo.dodajKrawedz(krawedz);
                ustawPolozenieWierzcholka(wierzcholek,drzewo,czyTak,poprzedniWierzcholek);
                poprzedniWierzcholek=wierzcholek;
@@ -84,10 +105,10 @@ public class GrafWczytajXml {
             String idWierzcholka =  daneNazwyXml.getNazwa() + ".".repeat(obliczIleRazyTaSamaNazwa(daneNazwyXml.getNazwa()));
             wykorzystaneNazwy = Arrays.copyOf(wykorzystaneNazwy, wykorzystaneNazwy.length + 1);
             wykorzystaneNazwy[wykorzystaneNazwy.length-1]=daneNazwyXml.getNazwa();
-            Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwyXml.getNazwa());
+            Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwyXml.getNazwa(), daneNazwyXml.getNazwa()+" "+daneNazwyXml.getLabel());
             drzewo.dodajWierzcholek(wierzcholek);
             Krawedz krawedz = new Krawedz(poprzedniWierzcholek.getId()+wierzcholek.getId(),poprzedniWierzcholek.getId(),wierzcholek.getId()
-                    ,odwrocZnak(poprzedniDaneNazwy.getLabel(),czyTak));
+                    ,czyTak);
             drzewo.dodajKrawedz(krawedz);
             ustawPolozenieWierzcholka(wierzcholek,drzewo,czyTak,poprzedniWierzcholek);
         }

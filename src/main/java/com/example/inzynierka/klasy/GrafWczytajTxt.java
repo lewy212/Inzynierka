@@ -30,17 +30,34 @@ public class GrafWczytajTxt {
         this.aktualnySrodek=0;
         this.odlegloscMiedzyWierzcholkami = 15;
     }
-    public void loadGraph(String filePath, Drzewo drzewo) {
-        try(InputStream is = getClass().getResourceAsStream(filePath);
-         BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+    public void loadGraph(String filePath, Drzewo drzewo,boolean czyPrzykladowy) {
+        if(czyPrzykladowy)
+        {
+            try(InputStream is = getClass().getResourceAsStream(filePath);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
-            String line;
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-                processLine(line, drzewo);
+                String line;
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                    processLine(line, drzewo);
+                }
+            } catch (IOException e ) {
+                e.printStackTrace();
             }
-        } catch (IOException e ) {
-            e.printStackTrace();
+        }
+        else
+        {
+            try(InputStream is = new FileInputStream(filePath);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+
+                String line;
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                    processLine(line, drzewo);
+                }
+            } catch (IOException e ) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -75,7 +92,7 @@ public class GrafWczytajTxt {
                 {
                     wykorzystaneNazwy = Arrays.copyOf(wykorzystaneNazwy, wykorzystaneNazwy.length + 1);
                     parts[liczbaKresek]=parts[liczbaKresek] + ".".repeat(ileRazyTaSamaNazwa);
-                    Wierzcholek wierzcholek = new Wierzcholek(parts[liczbaKresek],nazwa);
+                    Wierzcholek wierzcholek = new Wierzcholek(parts[liczbaKresek],nazwa,nazwa+" "+parts[liczbaKresek+1]+ " "+parts[liczbaKresek+2]);
                     drzewo.dodajWierzcholek(wierzcholek);
                     wykorzystaneNazwy[wykorzystaneNazwy.length-1] = parts[liczbaKresek];
                     wykorzystanePary.add(new Para(parts[liczbaKresek],liczbaKresek));
@@ -137,7 +154,7 @@ public class GrafWczytajTxt {
 
             wykorzystaneNazwy = Arrays.copyOf(wykorzystaneNazwy, wykorzystaneNazwy.length + 1);
             wykorzystaneEtykiety = Arrays.copyOf(wykorzystaneEtykiety,wykorzystaneEtykiety.length+1);
-            Wierzcholek wierzcholek = new Wierzcholek(parts[liczbaKresek],parts[liczbaKresek]);
+            Wierzcholek wierzcholek = new Wierzcholek(parts[liczbaKresek],parts[liczbaKresek],parts[liczbaKresek]+ " "+parts[liczbaKresek+1]+" "+parts[liczbaKresek+2]);
             drzewo.dodajWierzcholek(wierzcholek);
             wykorzystaneNazwy[wykorzystaneNazwy.length-1] = parts[liczbaKresek];
             wykorzystaneEtykiety[wykorzystaneEtykiety.length-1] = parts[liczbaKresek+1]+parts[liczbaKresek+2];
@@ -209,7 +226,7 @@ public class GrafWczytajTxt {
         String nazwa=parts[liczbaKresek+5];
         parts[liczbaKresek+5]=parts[liczbaKresek+5] + ".".repeat(ileRazyTaSamaNazwa);
 
-        Wierzcholek wierzcholek1 = new Wierzcholek(parts[liczbaKresek+5],nazwa);
+        Wierzcholek wierzcholek1 = new Wierzcholek(parts[liczbaKresek+5],nazwa,nazwa+" "+parts[liczbaKresek+4]+" "+parts[liczbaKresek+6]);
         drzewo.dodajWierzcholek(wierzcholek1);
         if(odwrotnaStrona)
         {

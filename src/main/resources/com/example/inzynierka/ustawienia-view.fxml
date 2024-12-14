@@ -128,19 +128,71 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Obramowanie px: ">
+            <Label text="Kolor Tekstu: ">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <Spinner fx:id="obramowaniePx" editable="true" prefWidth="130.0">
-               <valueFactory>
-                  <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="1" max="100" min="1" />
-               </valueFactory>
+            <ChoiceBox fx:id="kolorTekstu" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="red" />
+                     <String fx:value="blue" />
+                     <String fx:value="green" />
+                     <String fx:value="white" />
+                     <String fx:value="black" />
+                  </FXCollections>
+               </items>
                <HBox.margin>
                   <Insets left="30.0" />
                </HBox.margin>
-            </Spinner>
+            </ChoiceBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Kolor wybranego elementu: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="kolorWyboranegoElementu" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="red" />
+                     <String fx:value="blue" />
+                     <String fx:value="green" />
+                     <String fx:value="white" />
+                     <String fx:value="black" />
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Kolor krawedzi: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="kolorKrawedzi" styleClass="choice-box">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="red" />
+                     <String fx:value="blue" />
+                     <String fx:value="green" />
+                     <String fx:value="white" />
+                     <String fx:value="black" />
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
@@ -168,6 +220,23 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
+            <Label text="Obramowanie px: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Spinner fx:id="obramowaniePx" editable="true" prefWidth="130.0">
+               <valueFactory>
+                  <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="1" max="100" min="1" />
+               </valueFactory>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </Spinner>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
             <Label text="Size mode: ">
                <font>
                   <Font size="20.0" />
@@ -186,6 +255,7 @@
             </ChoiceBox>
          </children>
       </HBox>
+
       <Button fx:id="powrotButton" mnemonicParsing="false" onAction="#Powrot" text="Powrót">
          <font>
             <Font size="20.0" />
