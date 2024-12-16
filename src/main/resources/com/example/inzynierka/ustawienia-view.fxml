@@ -255,6 +255,23 @@
             </ChoiceBox>
          </children>
       </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+         <children>
+            <Label text="Minimalna odleglosc: ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Spinner fx:id="minimalnaOdleglosc" editable="true" prefWidth="130.0">
+               <valueFactory>
+                  <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="50" max="100" min="1" />
+               </valueFactory>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </Spinner>
+         </children>
+      </HBox>
 
       <Button fx:id="powrotButton" mnemonicParsing="false" onAction="#Powrot" text="Powrót">
          <font>

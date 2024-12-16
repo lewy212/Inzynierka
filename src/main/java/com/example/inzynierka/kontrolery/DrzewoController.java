@@ -31,12 +31,9 @@ import javafx.util.Callback;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.stream.ProxyPipe;
 import org.graphstream.stream.file.FileSinkSVG;
 import org.graphstream.ui.fx_viewer.FxViewer;
-import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
@@ -50,6 +47,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 public class DrzewoController {
     @FXML
@@ -86,6 +84,7 @@ public class DrzewoController {
     private Wierzcholek poprzednioWybranyWierzcholek = null;
     private String shapeWezlow, shapeLisci,liczbaPx,kolorWezlow,kolorLisci,obramowaniePx,kolorObramowania,sizeMode,kolorTekstu,kolorWyboranegoElementu,format,sciezka;
     private int paddingWezlow=4, paddingLisci=4;
+    boolean buttonClicked = false,wyszedlemZeZmiany = false;
     public void initialize() throws IOException, JAXBException {
         Drzewo drzewo = new Drzewo();
         readSetting();
@@ -106,6 +105,7 @@ public class DrzewoController {
         System.out.println(drzewo.getGraf().getNodeCount());
         String tekst = "";
         zmienWyswietlenie(drzewo);
+        drzewo.poprawUstawienieWierzcholkow();
         nodeColumn.setCellValueFactory(new PropertyValueFactory<>("label")); // Zmieniamy na label wierzchołka
         parentColumn.setCellValueFactory(new PropertyValueFactory<>("rodzicId")); // Zmieniamy na rodzica
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("wartosc")); // Zmieniamy na wartość wierzchołka (jeśli to jest atrybut)
@@ -184,6 +184,21 @@ public class DrzewoController {
 
         Viewer viewer = new FxViewer(drzewo.getGraf(), Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         Parent graphView = (Parent) viewer.addDefaultView(true);
+        org.graphstream.graph.Node node = drzewo.getGraf().getNode(0); // standardowy węzeł w modelu grafu
+        System.out.println(drzewo.getWierzcholekByid("F4").getPozX()+"    "+drzewo.getWierzcholekByid("F9.").getPozX()+"      "+drzewo.getWierzcholekByid("(A)").getPozX() );
+        for (int i = 0; i < drzewo.getMaksymalnaGlebokosc(); i++) {
+            int finalI = i;
+            String wierzcholkiNaGlebokosci = drzewo.getListaWierzcholkow().stream()
+                    .filter(w -> w.getGlebokosc() == finalI)   // Filtrujemy wierzchołki o głębokości równej i
+                    .map(Wierzcholek::getId)             // Mapujemy do ich ID
+                    .collect(Collectors.joining(", ")); // Łączymy ID w jeden string, rozdzielając przecinkami
+
+            System.out.println("Wierzchołki na głębokości " + i + ": " + wierzcholkiNaGlebokosci);
+        }
+
+
+// Uzyskiwanie GraphicNode z Viewer
+
         // Przetwarzanie kliknięć węzłów
         ViewerPipe pipe = viewer.newViewerPipe();
         ProxyPipe pipe2 = viewer.newViewerPipe();
@@ -197,8 +212,9 @@ public class DrzewoController {
 
             @Override
             public void buttonPushed(String id) {
+                if (buttonClicked) return;
+                buttonClicked = true;
                 Platform.runLater(() -> {
-
                     if (drzewo.getGraf().getEdge(id) != null) {
                         // Jeśli istnieje krawędź o danym ID
                         System.out.println("Kliknięto krawędź: " + id);
@@ -209,6 +225,7 @@ public class DrzewoController {
 
                         zmienWierzcholek2(drzewo, id);
                     }
+                    wyszedlemZeZmiany=true;
                 });
             }
 
@@ -233,6 +250,11 @@ public class DrzewoController {
             while (true) {
                 pipe.pump();
                 pipe2.pump();
+                if(buttonClicked&&wyszedlemZeZmiany)
+                {
+                    wyszedlemZeZmiany=false;
+                    buttonClicked=false;
+                }
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -284,6 +306,7 @@ public class DrzewoController {
             checkBoxMenu.setVisible(!checkBoxMenu.isVisible());
             tableMenu.setVisible(false);
             System.out.println("klikam");
+            drzewo.poprawUstawienieWierzcholkow();
         });
         zapiszSvg.setOnAction(event -> {
             FileSinkSVG fileSink = new FileSinkSVG();
@@ -311,7 +334,6 @@ public class DrzewoController {
 
 // Ustawiamy nowy arkusz stylów w grafie
                 drzewo.getGraf().setAttribute("ui.stylesheet", updatedStylesheet);
-                graph.getNode(0).setAttribute("xy", 1000,100);
                 System.out.println("Zaktualizowany arkusz stylów: " + drzewo.getGraf().getAttribute("ui.stylesheet", String.class));
                 //drzewo.getGraf().getNode(0).setAttribute("ui.style", "size: 1000;");
                 Object positionObj = drzewo.getGraf().getNode(0).getAttribute("xy");

@@ -14,6 +14,7 @@ public class Wierzcholek {
     private Double roznica;
     private String wartosc;
 
+    private int glebokosc;
 
     public Wierzcholek(String id, String label) {
         this.id = id;
@@ -105,5 +106,13 @@ public class Wierzcholek {
 
     public void setFullLabel(String fullLabel) {
         this.fullLabel = fullLabel;
+    }
+
+    public int getGlebokosc() {
+        return glebokosc;
+    }
+
+    public void setGlebokosc(int glebokosc) {
+        this.glebokosc = glebokosc;
     }
 }

@@ -34,7 +34,7 @@ public class GrafWczytajXml {
                 }
                 XmlDrzewo drzewoXml = (XmlDrzewo) unmarshaller.unmarshal(inputStream);
                 // Przypisanie danych do obiektu Drzewo
-                Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null);
+                Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null,0);
 
                 for (Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow()) {
                     System.out.println(wierzcholek.getId() + "   " + wierzcholek.getLabel());
@@ -48,7 +48,7 @@ public class GrafWczytajXml {
         {
             try (InputStream inputStream = new FileInputStream(filePath)) {
                 XmlDrzewo drzewoXml = (XmlDrzewo) unmarshaller.unmarshal(inputStream);
-                Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null);
+                Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null,0);
 
                 for (Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow()) {
                     System.out.println(wierzcholek.getId() + "   " + wierzcholek.getLabel());
@@ -63,7 +63,7 @@ public class GrafWczytajXml {
 
     }
 
-    private Drzewo przypiszDane(Wezel node, Drzewo drzewo, Wierzcholek poprzedniWierzcholek, DaneNazwyXml poprzedniDaneNazwy, String czyTak)
+    private Drzewo przypiszDane(Wezel node, Drzewo drzewo, Wierzcholek poprzedniWierzcholek, DaneNazwyXml poprzedniDaneNazwy, String czyTak,int glebokosc)
     {
        if(node.getQuestion() != null)
        {
@@ -72,7 +72,9 @@ public class GrafWczytajXml {
            wykorzystaneNazwy = Arrays.copyOf(wykorzystaneNazwy, wykorzystaneNazwy.length + 1);
            wykorzystaneNazwy[wykorzystaneNazwy.length-1]=daneNazwyXml.getNazwa();
            Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwyXml.getNazwa(), daneNazwyXml.getNazwa()+" "+daneNazwyXml.getLabel());
+           wierzcholek.setGlebokosc(glebokosc);
            drzewo.dodajWierzcholek(wierzcholek);
+           drzewo.setMaksymalnaGlebokosc(glebokosc);
            if (poprzedniWierzcholek==null)
            {
                drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",0,0);
@@ -91,11 +93,11 @@ public class GrafWczytajXml {
            }
            if(node.getYes()!=null)
            {
-               przypiszDane(node.getYes(),drzewo,poprzedniWierzcholek,daneNazwyXml,"yes");
+               przypiszDane(node.getYes(),drzewo,poprzedniWierzcholek,daneNazwyXml,"yes",glebokosc+1);
            }
            if(node.getNo()!=null)
            {
-               przypiszDane(node.getNo(),drzewo,poprzedniWierzcholek,daneNazwyXml,"no");
+               przypiszDane(node.getNo(),drzewo,poprzedniWierzcholek,daneNazwyXml,"no",glebokosc+1);
            }
 
        }

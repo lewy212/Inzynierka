@@ -39,6 +39,9 @@ public class UstawieniaController {
     private ChoiceBox<String> kolorWyboranegoElementu;
     @FXML
     private ChoiceBox<String> kolorKrawedzi;
+
+    @FXML
+    private Spinner<Integer> minimalnaOdleglosc;
     @FXML
     protected void Powrot() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("menu-view.fxml"));
@@ -63,6 +66,7 @@ public class UstawieniaController {
         kolorTekstu.setValue("black");
         kolorWyboranegoElementu.setValue("red");
         kolorKrawedzi.setValue("black");
+        minimalnaOdleglosc.getValueFactory().setValue(50);
         // Wczytanie zapisanej wartości
         loadSettings();
     }
@@ -78,6 +82,7 @@ public class UstawieniaController {
         prefs.put("sizeMode", sizeMode.getValue());
         prefs.put("kolorTekstu", kolorTekstu.getValue());
         prefs.put("kolorWyboranegoElementu", kolorWyboranegoElementu.getValue());
+        prefs.putInt("minimalnaOdleglosc", minimalnaOdleglosc.getValue());
     }
     private void loadSettings() {
         Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
@@ -128,5 +133,7 @@ public class UstawieniaController {
         if (kolorWyboranegoElementuPrefs != null) {
             kolorWyboranegoElementu.setValue(kolorWyboranegoElementuPrefs);
         }
+
+        minimalnaOdleglosc.getValueFactory().setValue(prefs.getInt("minimalnaOdleglosc", 50));
     }
 }
