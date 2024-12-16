@@ -109,6 +109,8 @@ public class GrafWczytajXml {
             wykorzystaneNazwy[wykorzystaneNazwy.length-1]=daneNazwyXml.getNazwa();
             Wierzcholek wierzcholek = new Wierzcholek(idWierzcholka,daneNazwyXml.getNazwa(), daneNazwyXml.getNazwa()+" "+daneNazwyXml.getLabel());
             drzewo.dodajWierzcholek(wierzcholek);
+            wierzcholek.setGlebokosc(glebokosc);
+            drzewo.setMaksymalnaGlebokosc(glebokosc);
             Krawedz krawedz = new Krawedz(poprzedniWierzcholek.getId()+wierzcholek.getId(),poprzedniWierzcholek.getId(),wierzcholek.getId()
                     ,czyTak);
             drzewo.dodajKrawedz(krawedz);
@@ -170,7 +172,7 @@ public class GrafWczytajXml {
             {
                 if(poprzedniWierzcholek.getPozX()==0.0)
                 {
-                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",150,-50);
+                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",new double[]{150.0, -50.0});
                     wierzcholek.setPozX(150.0);
                     wierzcholek.setPozY(-50.0);
                     wierzcholek.setRoznica(150.0);
@@ -179,8 +181,8 @@ public class GrafWczytajXml {
                 {
                     wierzcholek.setPozX(poprzedniWierzcholek.getPozX()+ poprzedniWierzcholek.getRoznica()*1.2/2);
                     wierzcholek.setPozY(poprzedniWierzcholek.getPozY()-30);
-                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",wierzcholek.getPozX(),wierzcholek.getPozY());
-                    wierzcholek.setRoznica(wierzcholek.getPozX()-poprzedniWierzcholek.getPozX());
+                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",new double[]{wierzcholek.getPozX(), wierzcholek.getPozY()});
+                    wierzcholek.setRoznica(Math.abs(wierzcholek.getPozX()-poprzedniWierzcholek.getPozX()));
                 }
             }
 
@@ -191,7 +193,7 @@ public class GrafWczytajXml {
             {
                 if(poprzedniWierzcholek.getPozX()==0.0)
                 {
-                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",-150,-50);
+                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",new double[]{-150.0, -50.0});
                     wierzcholek.setPozX(-150.0);
                     wierzcholek.setPozY(-50.0);
                     wierzcholek.setRoznica(150.0);
@@ -200,8 +202,8 @@ public class GrafWczytajXml {
                 {
                     wierzcholek.setPozX(poprzedniWierzcholek.getPozX()-poprzedniWierzcholek.getRoznica()*1.2/2);
                     wierzcholek.setPozY(poprzedniWierzcholek.getPozY()-30);
-                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",wierzcholek.getPozX(),wierzcholek.getPozY());
-                    wierzcholek.setRoznica(wierzcholek.getPozX()-poprzedniWierzcholek.getPozX());
+                    drzewo.getGraf().getNode(wierzcholek.getId()).setAttribute("xy",new double[]{wierzcholek.getPozX(), wierzcholek.getPozY()});
+                    wierzcholek.setRoznica(Math.abs(wierzcholek.getPozX()-poprzedniWierzcholek.getPozX()));
                 }
             }
         }

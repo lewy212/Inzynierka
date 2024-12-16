@@ -185,7 +185,7 @@ public class DrzewoController {
         Viewer viewer = new FxViewer(drzewo.getGraf(), Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         Parent graphView = (Parent) viewer.addDefaultView(true);
         org.graphstream.graph.Node node = drzewo.getGraf().getNode(0); // standardowy węzeł w modelu grafu
-        System.out.println(drzewo.getWierzcholekByid("F4").getPozX()+"    "+drzewo.getWierzcholekByid("F9.").getPozX()+"      "+drzewo.getWierzcholekByid("(A)").getPozX() );
+        System.out.println(drzewo.getWierzcholekByid("(Y).").getPozX()+"    "+drzewo.getWierzcholekByid("(A)").getPozX()+"      "+drzewo.getWierzcholekByid("(A)").getPozX() );
         for (int i = 0; i < drzewo.getMaksymalnaGlebokosc(); i++) {
             int finalI = i;
             String wierzcholkiNaGlebokosci = drzewo.getListaWierzcholkow().stream()
@@ -306,7 +306,6 @@ public class DrzewoController {
             checkBoxMenu.setVisible(!checkBoxMenu.isVisible());
             tableMenu.setVisible(false);
             System.out.println("klikam");
-            drzewo.poprawUstawienieWierzcholkow();
         });
         zapiszSvg.setOnAction(event -> {
             FileSinkSVG fileSink = new FileSinkSVG();
