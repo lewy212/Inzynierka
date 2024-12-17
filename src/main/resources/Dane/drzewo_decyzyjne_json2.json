@@ -1,0 +1,76 @@
+{
+  "question": "F1 <= -0.104241",
+  "type": "node",
+  "yes": {
+    "question": "F5 <= 0.389369",
+    "type": "node",
+    "yes": {
+      "question": "F9 <= 0.235582",
+      "type": "node",
+      "yes": {
+        "question": "0 (A) (1434/911)",
+        "type": "leaf",
+        "yes": null,
+        "no": null
+      },
+      "no": {
+        "question": "F4 <= 1.0851",
+        "type": "node",
+        "yes": {
+          "question": "4 (E) (931/372)",
+          "type": "leaf",
+          "yes": null,
+          "no": null
+        },
+        "no": null
+      }
+    },
+    "no": {
+      "question": "F9 <= 1.73229",
+      "type": "node",
+      "yes": {
+        "question": "11 (Y) (208/45)",
+        "type": "leaf",
+        "yes": null,
+        "no": null
+      },
+      "no": null
+    }
+  },
+  "no": {
+    "question": "F3 <= 0.267634",
+    "type": "node",
+    "yes": {
+      "question": "F5 <= 0.574541",
+      "type": "node",
+      "yes": {
+        "question": "0 (A) (3996/1512)",
+        "type": "leaf",
+        "yes": null,
+        "no": null
+      },
+      "no": {
+        "question": "8 (I) (749/0)",
+        "type": "leaf",
+        "yes": null,
+        "no": null
+      }
+    },
+    "no": {
+      "question": "F5 <= 0.389369",
+      "type": "node",
+      "yes": {
+        "question": "5 (F) (610/228)",
+        "type": "leaf",
+        "yes": null,
+        "no": null
+      },
+      "no": {
+        "question": "4 (E) (77/31)",
+        "type": "leaf",
+        "yes": null,
+        "no": null
+      }
+    }
+  }
+}

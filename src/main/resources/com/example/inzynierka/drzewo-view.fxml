@@ -24,6 +24,9 @@
                   <TableColumn fx:id="valueColumn" text="Wartość" />
                </columns>
             </TableView>
+            <StackPane alignment="CENTER">
+               <Button fx:id="usunZaznaczenie" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Usun zaznaczenie" />
+            </StackPane>
          </VBox>
       </StackPane>
    </right>

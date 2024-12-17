@@ -57,10 +57,10 @@ public class UstawieniaController {
         // Ustawienie domyślnej wartości
         shapeWezlow.setValue("circle");
         shapeLisci.setValue("box");
-        liczbaPx.getValueFactory().setValue(1);
+        liczbaPx.getValueFactory().setValue(11);
         obramowaniePx.getValueFactory().setValue(1);
-        kolorWezlow.setValue("black");
-        kolorLisci.setValue("black");
+        kolorWezlow.setValue("white");
+        kolorLisci.setValue("green");
         kolorObramowania.setValue("black");
         sizeMode.setValue("fit");
         kolorTekstu.setValue("black");

@@ -58,6 +58,7 @@ public class GrafWczytajTxt {
                     System.out.println(line);
                     processLine(line, drzewo);
                 }
+                ustawPolozenieWierzcholka2(drzewo.getListaWierzcholkow().get(0),drzewo,null);
             } catch (IOException e ) {
                 e.printStackTrace();
             }
@@ -163,6 +164,7 @@ public class GrafWczytajTxt {
             else
             {
                 wKtoraStrone = false;
+                odwrotnaStrona=true;
             }
         }
         else

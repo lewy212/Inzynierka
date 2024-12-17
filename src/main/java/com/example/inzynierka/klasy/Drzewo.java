@@ -191,10 +191,8 @@ public class Drzewo {
 
                        if (!dzieci.isEmpty())
                        {
-                           // Obliczamy nową pozycję rodzica jako środek jego dzieci
                            double nowaPozycja = (dzieci.get(0).getPozX() + dzieci.get(dzieci.size() - 1).getPozX()) / 2;
 
-                           // Sprawdzamy, czy nowa pozycja rodzica koliduje z innymi na głębokości i-1
                            boolean kolizja = rodzice.stream()
                                    .anyMatch(r -> !r.equals(rodzic) && Math.abs(r.getPozX() - nowaPozycja) < minOdlegosc);
 
@@ -204,7 +202,6 @@ public class Drzewo {
                            }
                            else
                            {
-                               // Jeśli jest kolizja, przesuwamy rodzica tak, aby zachować minimalny odstęp
                                for (int j = 0; j < rodzice.size() - 1; j++) {
                                    Wierzcholek aktualnyRodzic = rodzice.get(j);
                                    Wierzcholek kolejnyRodzic = rodzice.get(j + 1);
@@ -224,24 +221,20 @@ public class Drzewo {
        poprawSymetrieRodzicow();
     }
     private void poprawSymetrieRodzicow() {
-        // Iterujemy od najmniejszej głębokości do największej
         for (int i = 0; i < this.maksymalnaGlebokosc; i++) {
             int finalI = i;
 
-            // Pobieramy wierzchołki na bieżącej głębokości (rodzice)
             List<Wierzcholek> listaRodzicow = listaWierzcholkow.stream()
                     .filter(w -> w.getGlebokosc() == finalI)
                     .sorted(Comparator.comparingDouble(Wierzcholek::getPozX))
                     .collect(Collectors.toList());
 
-            // Pobieramy wierzchołki na głębokości niższej (dzieci)
             List<Wierzcholek> listaDzieci = listaWierzcholkow.stream()
                     .filter(w -> w.getGlebokosc() == finalI + 1)
                     .sorted(Comparator.comparingDouble(Wierzcholek::getPozX))
                     .collect(Collectors.toList());
 
             for (Wierzcholek rodzic : listaRodzicow) {
-                // Znajdujemy dzieci danego rodzica
                 List<Wierzcholek> dzieci = listaDzieci.stream()
                         .filter(w -> rodzic.getId() != null && rodzic.getId().equals(w.getRodzicId()))
                         .sorted(Comparator.comparingDouble(Wierzcholek::getPozX))
@@ -251,22 +244,18 @@ public class Drzewo {
                     Wierzcholek leweDziecko = dzieci.get(0);
                     Wierzcholek praweDziecko = dzieci.get(dzieci.size() - 1);
 
-                    // Obliczamy idealną pozycję rodzica (środek dzieci)
+
                     double idealnaPozycjaRodzica = (leweDziecko.getPozX() + praweDziecko.getPozX()) / 2;
 
                     if (Math.abs(rodzic.getPozX() - idealnaPozycjaRodzica) > 1e-6) {
-                        // Rodzic nie jest na środku - musimy przesunąć bliższe dziecko
+
                         double odlegloscDoLewego = Math.abs(rodzic.getPozX() - leweDziecko.getPozX());
                         double odlegloscDoPrawego = Math.abs(rodzic.getPozX() - praweDziecko.getPozX());
 
-                        // Wybieramy dziecko bliższe rodzicowi
                         Wierzcholek blizszeDziecko = odlegloscDoLewego < odlegloscDoPrawego ? leweDziecko : praweDziecko;
                         Wierzcholek dalszeDziecko = blizszeDziecko == leweDziecko ? praweDziecko : leweDziecko;
 
-                        // Obliczamy nową pozycję bliższego dziecka
                         double noweXBlizszego = rodzic.getPozX() + (rodzic.getPozX() - dalszeDziecko.getPozX());
-
-                        // Sprawdzamy, czy przesunięcie bliższego dziecka nie powoduje konfliktów
                         boolean czyMoznaPrzesunac = listaDzieci.stream()
                                 .filter(w -> !w.equals(blizszeDziecko))
                                 .noneMatch(w -> Math.abs(w.getPozX() - noweXBlizszego) < minOdlegosc);
