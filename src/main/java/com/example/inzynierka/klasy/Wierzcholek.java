@@ -13,7 +13,7 @@ public class Wierzcholek {
     private Double pozY;
     private Double roznica;
     private String wartosc;
-
+    private String strona;
     private int glebokosc;
 
     public Wierzcholek(String id, String label) {
@@ -110,6 +110,14 @@ public class Wierzcholek {
 
     public int getGlebokosc() {
         return glebokosc;
+    }
+
+    public String getStrona() {
+        return strona;
+    }
+
+    public void setStrona(String strona) {
+        this.strona = strona;
     }
 
     public void setGlebokosc(int glebokosc) {

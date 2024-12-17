@@ -129,9 +129,9 @@ public class DrzewoController {
         List<Wierzcholek> listaWierzcholkow = drzewo.getListaWierzcholkow();
         for (Wierzcholek wierzcholek : listaWierzcholkow) {
             daneDrzewa.add(wierzcholek); // Dodajemy wierzchołki do listy
-            System.out.println(wierzcholek.getLabel()+" TO JEST LABEL");
+            System.out.println(wierzcholek.getId()+" x: "+wierzcholek.getPozX()+"   y: "+wierzcholek.getPozY());
         }
-
+        System.out.println(drzewo.getWierzcholekByid("F9.").getStrona());
         tableView.setItems(daneDrzewa); // Ustawiamy dane w tabeli
         // Dodajemy listener kliknięcia wiersza tabeli
         tableView.setRowFactory(tv -> {
@@ -171,8 +171,7 @@ public class DrzewoController {
         for (int i = 0; i < drzewo.getGraf().getNodeCount(); i++) {
             tekst = tekst + drzewo.getGraf().getNode(i).getId() + " ";
         }
-        double a = 0;
-        drzewo.getGraf().getNode(0).setAttribute("xy", new double[]{0.0, 0.0});
+
 
         Object obj = drzewo.getGraf().getNode(0).getAttribute("xy");
         if (obj instanceof double[]) {
