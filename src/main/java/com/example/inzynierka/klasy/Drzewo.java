@@ -270,9 +270,38 @@ public class Drzewo {
         ustawPozycjeXYzUstawien();
     }
 
+    public int obliczIleJuzJestTakichWierzcholkow(String newId)
+    {
+        return (int) listaWierzcholkow.stream()
+                .filter(wierzcholek -> wierzcholek.getId().replaceAll("\\.*$", "").equals(newId))
+                .count();
+    }
 
+    public void setGraf(Graph graf) {
+        this.graf = graf;
+    }
 
+    public double getMaxLewo() {
+        return maxLewo;
+    }
 
+    public void setMaxLewo(double maxLewo) {
+        this.maxLewo = maxLewo;
+    }
 
+    public double getMaxPrawo() {
+        return maxPrawo;
+    }
 
+    public void setMaxPrawo(double maxPrawo) {
+        this.maxPrawo = maxPrawo;
+    }
+
+    public double getMinOdlegosc() {
+        return minOdlegosc;
+    }
+
+    public void setMinOdlegosc(double minOdlegosc) {
+        this.minOdlegosc = minOdlegosc;
+    }
 }

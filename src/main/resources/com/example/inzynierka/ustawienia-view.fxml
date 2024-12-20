@@ -272,7 +272,11 @@
             </Spinner>
          </children>
       </HBox>
-
+      <Button fx:id="przywrocButton" mnemonicParsing="false" onAction="#PrzywrocUstawienia" text="Ustaw domyślne ustawienia">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
       <Button fx:id="powrotButton" mnemonicParsing="false" onAction="#Powrot" text="Powrót">
          <font>
             <Font size="20.0" />

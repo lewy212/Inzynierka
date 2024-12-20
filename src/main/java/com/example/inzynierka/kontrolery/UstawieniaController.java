@@ -53,6 +53,27 @@ public class UstawieniaController {
         //WynikiModel.getInstance().getWyniki().add(new Wynik("GraczXD", savedDifficulty, 100));
         stage.setScene(new Scene(root, currentScene.getWidth(), currentScene.getHeight()));
     }
+    @FXML
+    protected void PrzywrocUstawienia() {
+        ustawNull();
+        initialize();
+    }
+
+    private void ustawNull() {
+        Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
+        prefs.remove("shapeWezlow");
+        prefs.remove("shapeLisci");
+        prefs.remove("liczbaPx");
+        prefs.remove("kolorWezlow");
+        prefs.remove("kolorLisci");
+        prefs.remove("obramowaniePx");
+        prefs.remove("kolorObramowania");
+        prefs.remove("sizeMode");
+        prefs.remove("kolorTekstu");
+        prefs.remove("kolorWyboranegoElementu");
+        prefs.remove("minimalnaOdleglosc");
+    }
+
     public void initialize() {
         // Ustawienie domyślnej wartości
         shapeWezlow.setValue("circle");
@@ -67,7 +88,6 @@ public class UstawieniaController {
         kolorWyboranegoElementu.setValue("red");
         kolorKrawedzi.setValue("black");
         minimalnaOdleglosc.getValueFactory().setValue(50);
-        // Wczytanie zapisanej wartości
         loadSettings();
     }
     private void saveSettings() {
@@ -136,4 +156,6 @@ public class UstawieniaController {
 
         minimalnaOdleglosc.getValueFactory().setValue(prefs.getInt("minimalnaOdleglosc", 50));
     }
+
+
 }
