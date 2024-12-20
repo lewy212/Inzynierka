@@ -369,7 +369,7 @@ public class DrzewoController {
 
                             // Utwórz nowy węzeł z nowym ID
                             Node newNode = drzewo.getGraf().addNode(newId);
-                            Wierzcholek nowyWierzcholek = new Wierzcholek(newId, newId,newId +" " +field2.getText().trim());
+                            Wierzcholek nowyWierzcholek = new Wierzcholek(newId, usunKropki(newId),usunKropki(newId) +" " +field2.getText().trim());
 
                             // Skopiuj atrybuty ze starego węzła
                             originalNode.attributeKeys().forEach(key -> {
@@ -378,7 +378,7 @@ public class DrzewoController {
                                     newNode.setAttribute(key, value);
                                 }
                             });
-                            newNode.setAttribute("label", newId);
+                            newNode.setAttribute("label", usunKropki(newId));
 
                             // Przenieś krawędzie
                             String finalNewId = newId;
