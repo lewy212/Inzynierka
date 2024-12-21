@@ -1,0 +1,155 @@
+/* Tło i padding dla całej aplikacji */
+.root {
+    -fx-background-color: #ECEFF1;
+    -fx-padding: 20;
+}
+
+/* Ustawienia dla labeli ChoiceBoxów */
+.labelChoiceBox {
+    -fx-font-size: 17px;
+    -fx-text-fill: #37474F;
+    -fx-pref-width: 230;
+}
+
+/* Ustawienia tytułu */
+#ustawieniaLabel {
+    -fx-text-fill: #37474F;
+    -fx-font-weight: bold;
+    -fx-font-size: 43px;
+    -fx-alignment: center;
+    -fx-margin: 20 0 40 0;
+}
+
+/* Ustawienia dla przycisków */
+.button {
+    -fx-background-radius: 10;
+    -fx-pref-width: 200; /* Zmniejszenie szerokości przycisków */
+    -fx-padding: 8 16; /* Mniejsze paddingi */
+    -fx-font-weight: bold;
+    -fx-font-size: 18px; /* Zmniejszenie fontu */
+}
+
+/* Przyciski niebieski i ciemny */
+.niebieskiButton {
+    -fx-background-color: #03A9F4;
+    -fx-text-fill: white;
+}
+
+.ciemnyButton {
+    -fx-background-color: #37474F;
+    -fx-text-fill: white;
+}
+
+/* Efekty hover i kliknięcia */
+.button:hover {
+    -fx-cursor: hand;
+}
+
+.button:pressed {
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+}
+
+/* Ustawienia dla ChoiceBox */
+.choice-box {
+    -fx-pref-width: 250;
+    -fx-padding: 5 10;
+    -fx-font-size: 15px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 5px;
+    -fx-border-color: #37474F;
+    -fx-border-width: 1px;
+}
+
+/* Dodatkowy styl dla zaznaczonego elementu w ChoiceBox */
+.choice-box:selected {
+    -fx-background-color: #03A9F4;
+    -fx-text-fill: white;
+}
+
+/* Stylowanie Spinnerów */
+.spinner {
+    -fx-pref-width: 250;
+    -fx-font-size: 15px;
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+    -fx-border-color: #37474F;
+    -fx-border-width: 1px;
+}
+
+/* Ustawienia dla HBox */
+.hbox {
+    -fx-spacing: 20;
+    -fx-alignment: center;
+    -fx-pref-width: 600px;
+}
+
+/* Ustawienia dla labeli w HBox */
+.hbox .label {
+    -fx-font-size: 20px;
+    -fx-text-fill: #37474F;
+}
+
+/* Ustawienia dla VBox w StackPane */
+#checkBoxMenu, #tableMenu {
+    -fx-spacing: 10;
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 10;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-border-color: #37474F;
+}
+
+#checkBoxMenu CheckBox {
+    -fx-font-size: 13px;  /* Rozmiar czcionki */
+    -fx-text-fill: #37474F;  /* Kolor tekstu */
+    -fx-padding: 5 10;  /* Padding wewnętrzny */
+}
+
+/* Styl dla zaznaczonego checkboxa */
+#checkBoxMenu CheckBox:selected {
+    -fx-text-fill: #03A9F4;  /* Kolor tekstu przy zaznaczeniu */
+}
+
+/* Styl dla nieaktywnego checkboxa */
+#checkBoxMenu CheckBox:disabled {
+    -fx-text-fill: #B0BEC5;  /* Kolor tekstu dla nieaktywnych checkboxów */
+}
+
+/* Efekt przy najechaniu na checkbox */
+#checkBoxMenu CheckBox:hover {
+    -fx-cursor: hand;  /* Zmiana kursora na "rękę" przy najechaniu */
+    -fx-background-color: #E3F2FD;  /* Lekko niebieskie tło przy najechaniu */
+}
+
+#usunZaznaczenie {
+    -fx-background-color: #03A9F4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-width: 220;
+    -fx-font-size: 15px;
+    -fx-padding: 6 12;
+}
+
+/* Dla StackPane w prawym panelu */
+#contentPane {
+    -fx-spacing: 10;
+    -fx-padding: 10;
+}
+
+/* Dla tabeli w StackPane */
+#tableView {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #37474F;
+    -fx-border-width: 1px;
+}
+
+#powrot, #zapiszSvg, #pokazTabele, #pokazCheckBoxy, #zapiszJpg, #zapiszPng {
+    -fx-background-color: #37474F;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-width: 180;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12;
+}
+

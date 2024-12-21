@@ -351,7 +351,6 @@ public class DrzewoController {
                 if (dialogButton == okButtonType) {
                     String newId = field1.getText().trim();
                     String newLabel = field2.getText().trim();
-                    // Sprawdzamy czy nowy ID nie jest pusty i czy nie istnieje już w grafie
                     if(finalWierzcholek.getId().equals(newId)||newId.equals(usunKropki(finalWierzcholek.getId())))
                     {
                         finalWierzcholek.setFullLabel(usunKropki(finalWierzcholek.getId())+" "+field2.getText().trim());
@@ -364,14 +363,14 @@ public class DrzewoController {
                             {
                                 newId= newId + ".".repeat(drzewo.obliczIleJuzJestTakichWierzcholkow(newId));
                             }
-                            // Zmieniamy nazwę węzła
+
                             System.out.println("Zmieniono ID węzła na: " + newId);
 
-                            // Utwórz nowy węzeł z nowym ID
+
                             Node newNode = drzewo.getGraf().addNode(newId);
                             Wierzcholek nowyWierzcholek = new Wierzcholek(newId, usunKropki(newId),usunKropki(newId) +" " +field2.getText().trim());
 
-                            // Skopiuj atrybuty ze starego węzła
+
                             originalNode.attributeKeys().forEach(key -> {
                                 if (!"label".equals(key)) {
                                     Object value = originalNode.getAttribute(key);
@@ -725,7 +724,7 @@ public class DrzewoController {
                         ? newNode.getAttribute("ui.style").toString()
                         : "";
                 newNode.setAttribute("ui.style", currentStyle + " size: " + size + ";");
-//                    newNode.setAttribute("xy", xyz[0], -xyz[1]);
+
             }
 
             drzewo1.poprawUstawienieWierzcholkow();
@@ -741,9 +740,19 @@ public class DrzewoController {
             }
 
             nowyGraph.setAttribute("ui.stylesheet",currentStylesheet);
-            fileSink.writeAll(nowyGraph, "output_graph.svg");
 
-            System.out.println("Graf został zapisany jako SVG: output_graph.svg");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Wybierz miejsce zapisu pliku SVG");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki SVG", "*.svg"));
+            File file = fileChooser.showSaveDialog(null); // `null` możesz zastąpić referencją do bieżącego okna
+
+            if (file != null) {
+                fileSink.writeAll(nowyGraph, file.getAbsolutePath());
+                System.out.println("Graf został zapisany jako SVG: " + file.getAbsolutePath());
+            } else {
+                System.out.println("Nie wybrano pliku. Operacja anulowana.");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

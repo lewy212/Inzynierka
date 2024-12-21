@@ -27,6 +27,8 @@ public class MenuController {
     private Label menuLabel;
     @FXML
     private Button menuButton;
+    @FXML
+    private Button wczytajDrzewoButton;
 
     @FXML
     protected void goToUstawienia() throws IOException {
@@ -38,22 +40,8 @@ public class MenuController {
     }
     public void initialize()
     {
-        //Preferences prefs = Preferences.userNodeForPackage(MenuController.class);
+
     }
-//    @FXML
-//    protected void goToWizualizacja()throws IOException{
-//
-//        FXMLLoader loader =new FXMLLoader(MainApplication.class.getResource("drzewo-view.fxml"));
-//        Parent root = loader.load();
-//        Scene currentScene = menuLabel.getScene();
-//        Stage stage = (Stage) currentScene.getWindow();
-//        // root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-//
-//        //WynikiModel.getInstance().getWyniki().add(new Wynik("GraczXD", savedDifficulty, 100));
-//
-//
-//        stage.setScene(new Scene(root, currentScene.getWidth(), currentScene.getHeight()));
-//    }
     @FXML
     protected void goToWizualizacja() throws IOException {
         // Wyświetl okienko dialogowe z przyciskami
@@ -158,4 +146,6 @@ public class MenuController {
 
         stage.setScene(new Scene(root, currentScene.getWidth(), currentScene.getHeight()));
     }
+
+
 }

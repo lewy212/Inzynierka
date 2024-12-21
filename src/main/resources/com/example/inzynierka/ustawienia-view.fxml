@@ -7,20 +7,21 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="619.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inzynierka.kontrolery.UstawieniaController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="619.0" prefWidth="887.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inzynierka.kontrolery.UstawieniaController">
    <children>
       <Label fx:id="ustawieniaLabel" text="Ustawienia">
          <font>
-            <Font size="43.0" />
+            <Font size="36.0" />
          </font>
          <VBox.margin>
             <Insets top="20.0" />
-         </VBox.margin></Label>
+         </VBox.margin>
+      </Label>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kształt węzłów: ">
+            <Label styleClass="labelChoiceBox" text="Kształt węzłów: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="shapeWezlow" styleClass="choice-box">
@@ -33,19 +34,19 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
          <VBox.margin>
-            <Insets top="40.0" />
+            <Insets top="20.0" />
          </VBox.margin>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kształt lisci: ">
+            <Label styleClass="labelChoiceBox" text="Kształt lisci: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="15.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="shapeLisci" styleClass="choice-box">
@@ -58,33 +59,33 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Liczba px: ">
+            <Label styleClass="labelChoiceBox" text="Liczba px: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
-            <Spinner fx:id="liczbaPx" editable="true" prefWidth="130.0">
+            <Spinner fx:id="liczbaPx" editable="true">
                <valueFactory>
                   <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="5" max="100" min="1" />
                </valueFactory>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </Spinner>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kolor węzłów: ">
+            <Label styleClass="labelChoiceBox" text="Kolor węzłów: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="kolorWezlow" styleClass="choice-box">
@@ -98,16 +99,16 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kolor lisci: ">
+            <Label styleClass="labelChoiceBox" text="Kolor lisci: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="kolorLisci" styleClass="choice-box">
@@ -121,16 +122,16 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kolor Tekstu: ">
+            <Label styleClass="labelChoiceBox" text="Kolor Tekstu: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="kolorTekstu" styleClass="choice-box">
@@ -144,16 +145,16 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kolor wybranego elementu: ">
+            <Label styleClass="labelChoiceBox" text="Kolor wybranego elementu: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="kolorWyboranegoElementu" styleClass="choice-box">
@@ -167,16 +168,16 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kolor krawedzi: ">
+            <Label styleClass="labelChoiceBox" text="Kolor krawedzi: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="kolorKrawedzi" styleClass="choice-box">
@@ -190,19 +191,19 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Kolor Obramowania: ">
+            <Label styleClass="labelChoiceBox" text="Kolor Obramowania: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
-            <ChoiceBox fx:id="kolorObramowania" styleClass="choice-box">
+            <ChoiceBox fx:id="kolorObramowania" prefWidth="200.0" styleClass="choice-box">
                <items>
                   <FXCollections fx:factory="observableArrayList">
                      <String fx:value="red" />
@@ -213,33 +214,33 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Obramowanie px: ">
+            <Label styleClass="labelChoiceBox" text="Obramowanie px: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
-            <Spinner fx:id="obramowaniePx" editable="true" prefWidth="130.0">
+            <Spinner fx:id="obramowaniePx" editable="true">
                <valueFactory>
                   <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="1" max="100" min="1" />
                </valueFactory>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </Spinner>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Size mode: ">
+            <Label styleClass="labelChoiceBox" text="Size mode: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="sizeMode" styleClass="choice-box">
@@ -250,36 +251,39 @@
                   </FXCollections>
                </items>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Minimalna odleglosc: ">
+            <Label prefWidth="230.0" styleClass="labelChoiceBox" text="Minimalna odleglosc: ">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </Label>
-            <Spinner fx:id="minimalnaOdleglosc" editable="true" prefWidth="130.0">
+            <Spinner fx:id="minimalnaOdleglosc" editable="true" prefWidth="200.0">
                <valueFactory>
                   <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="50" max="100" min="1" />
                </valueFactory>
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
             </Spinner>
          </children>
       </HBox>
-      <Button fx:id="przywrocButton" mnemonicParsing="false" onAction="#PrzywrocUstawienia" text="Ustaw domyślne ustawienia">
+      <Button fx:id="przywrocButton" mnemonicParsing="false" onAction="#PrzywrocUstawienia" styleClass="niebieskiButton" text="Przywróć domyślne">
          <font>
-            <Font size="20.0" />
+            <Font size="18.0" />
          </font>
+         <VBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </VBox.margin>
       </Button>
-      <Button fx:id="powrotButton" mnemonicParsing="false" onAction="#Powrot" text="Powrót">
+      <Button fx:id="powrotButton" mnemonicParsing="false" onAction="#Powrot" styleClass="ciemnyButton" text="Powrót">
          <font>
-            <Font size="20.0" />
+            <Font size="18.0" />
          </font>
       </Button>
    </children>

@@ -7,6 +7,7 @@ import com.example.inzynierka.klasy.Xml.GrafWczytajXml;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,7 +34,9 @@ public class MainApplication extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("menu-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1600, 900);
-
+        Image icon = new Image("drzewoIkonka.png");
+        primaryStage.getIcons().add(icon);
+        primaryStage.setTitle("Wizualizator drzew decyzyjnych");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
