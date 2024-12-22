@@ -34,9 +34,6 @@ public class GrafWczytajXml {
                 // Przypisanie danych do obiektu Drzewo
                 Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null,0);
 
-                for (Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow()) {
-                    System.out.println(wierzcholek.getId() + "   " + wierzcholek.getLabel());
-                }
 
             } catch (Exception e) {
                 throw new RuntimeException("Błąd podczas wczytywania pliku XML: " + filePath, e);
@@ -48,9 +45,7 @@ public class GrafWczytajXml {
                 XmlDrzewo drzewoXml = (XmlDrzewo) unmarshaller.unmarshal(inputStream);
                 Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null,0);
 
-                for (Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow()) {
-                    System.out.println(wierzcholek.getId() + "   " + wierzcholek.getLabel());
-                }
+
 
             } catch (FileNotFoundException e) {
                 throw new IllegalArgumentException("Plik nie został znaleziony: " + filePath, e);
