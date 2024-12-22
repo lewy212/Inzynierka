@@ -1,6 +1,9 @@
-package com.example.inzynierka.klasy;
+package com.example.inzynierka.klasy.Txt;
 
-import org.graphstream.graph.Edge;
+import com.example.inzynierka.klasy.ElementyDrzewa.Drzewo;
+import com.example.inzynierka.klasy.ElementyDrzewa.Krawedz;
+import com.example.inzynierka.klasy.ElementyDrzewa.Wierzcholek;
+import com.example.inzynierka.klasy.Para;
 
 import java.io.*;
 import java.util.*;
@@ -32,7 +35,7 @@ public class GrafWczytajTxt {
         this.aktualnySrodek=0;
         this.odlegloscMiedzyWierzcholkami = 15;
     }
-    public void loadGraph(String filePath, Drzewo drzewo,boolean czyPrzykladowy) {
+    public void loadGraph(String filePath, Drzewo drzewo, boolean czyPrzykladowy) {
         if(czyPrzykladowy)
         {
             try(InputStream is = getClass().getResourceAsStream(filePath);

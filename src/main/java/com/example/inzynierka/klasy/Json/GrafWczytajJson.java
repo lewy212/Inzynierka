@@ -1,10 +1,9 @@
 package com.example.inzynierka.klasy.Json;
 
-import com.example.inzynierka.klasy.Drzewo;
-import com.example.inzynierka.klasy.Krawedz;
-import com.example.inzynierka.klasy.Wierzcholek;
+import com.example.inzynierka.klasy.ElementyDrzewa.Drzewo;
+import com.example.inzynierka.klasy.ElementyDrzewa.Krawedz;
+import com.example.inzynierka.klasy.ElementyDrzewa.Wierzcholek;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.graphstream.graph.Edge;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,10 +33,6 @@ public class GrafWczytajJson {
         }
         JsonDrzewo drzewoJson = objectMapper.readValue(inputStream, JsonDrzewo.class);
         Drzewo noweDrzewo = przypiszDane(drzewoJson,drzewo,null,null,null,0);
-        for(Wierzcholek wierzcholek : noweDrzewo.getListaWierzcholkow())
-        {
-            System.out.println(wierzcholek.getId()+ "   " + wierzcholek.getLabel());
-        }
     }
 
     private Drzewo przypiszDane(JsonDrzewo jsonDrzewo,Drzewo drzewo,Wierzcholek poprzedniWierzcholek,DaneNazwy poprzedniDaneNazwy,String czyTak,int glebokosc)

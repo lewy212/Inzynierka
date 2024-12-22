@@ -6,11 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -52,18 +48,22 @@ public class MenuController {
 
         ButtonType wczytajPlikButton = new ButtonType("Wczytaj własny plik");
         ButtonType przykladowaButton = new ButtonType("Przykładowa wizualizacja");
+        ButtonType generujButton = new ButtonType("Generuj drzewo");
         ButtonType cancelButton = new ButtonType("Anuluj");
 
-        dialog.getButtonTypes().setAll(wczytajPlikButton, przykladowaButton, cancelButton);
+        dialog.getButtonTypes().setAll(wczytajPlikButton, przykladowaButton, generujButton, cancelButton);
 
         Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.isPresent()) {
             if (result.get() == wczytajPlikButton) {
-                // Wczytaj plik z komputera
                 wybierzPlik();
-            } else if (result.get() == przykladowaButton) {
-                // Wyświetl opcje wizualizacji
+            }
+            else if(result.get() == generujButton)
+            {
+                podajGlebokoscDrzewa();
+            }
+            else if (result.get() == przykladowaButton) {
                 wybierzPrzykladowaWizualizacja();
             }
         }
@@ -100,6 +100,38 @@ public class MenuController {
             zmienOknoNaWizualizacje();
             // Możesz dodać logikę wczytywania pliku tutaj
         }
+    }
+
+    private void podajGlebokoscDrzewa() {
+        TextInputDialog dialog = new TextInputDialog("2");
+        dialog.setTitle("Podaj głębokość drzewa");
+        dialog.setHeaderText("Wprowadź głębokość drzewa");
+        dialog.setContentText("Głębokość (od 2 do 5):");
+
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(input -> {
+            try {
+                int glebokosc = Integer.parseInt(input);
+                if (glebokosc >= 2 && glebokosc <= 5) {
+                    Preferences prefs = Preferences.userNodeForPackage(MenuController.class);
+                    prefs.putInt("glebokoscGenerowana", glebokosc);
+                    prefs.put("format", "json");
+                    prefs.put("sciezka","");
+                    try {
+                        zmienOknoNaWizualizacje();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    showError("Głębokość musi być liczbą od 2 do 5.");
+                    podajGlebokoscDrzewa(); // Ponowne wywołanie, jeśli błąd
+                }
+            } catch (NumberFormatException e) {
+                showError("Podano nieprawidłową wartość. Spróbuj ponownie.");
+                podajGlebokoscDrzewa(); // Ponowne wywołanie, jeśli błąd
+            }
+        });
     }
 
     private void wybierzPrzykladowaWizualizacja() {
@@ -147,5 +179,12 @@ public class MenuController {
         stage.setScene(new Scene(root, currentScene.getWidth(), currentScene.getHeight()));
     }
 
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Błąd");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
 }

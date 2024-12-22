@@ -87,7 +87,7 @@ public class UstawieniaController {
         kolorTekstu.setValue("black");
         kolorWyboranegoElementu.setValue("red");
         kolorKrawedzi.setValue("black");
-        minimalnaOdleglosc.getValueFactory().setValue(50);
+        minimalnaOdleglosc.getValueFactory().setValue(60);
         loadSettings();
     }
     private void saveSettings() {
@@ -154,7 +154,7 @@ public class UstawieniaController {
             kolorWyboranegoElementu.setValue(kolorWyboranegoElementuPrefs);
         }
 
-        minimalnaOdleglosc.getValueFactory().setValue(prefs.getInt("minimalnaOdleglosc", 50));
+        minimalnaOdleglosc.getValueFactory().setValue(prefs.getInt("minimalnaOdleglosc", 60));
     }
 
 

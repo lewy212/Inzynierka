@@ -1,4 +1,4 @@
-package com.example.inzynierka.klasy;
+package com.example.inzynierka.klasy.ElementyDrzewa;
 
 import com.example.inzynierka.kontrolery.UstawieniaController;
 import org.graphstream.graph.Graph;
@@ -14,14 +14,16 @@ public class Drzewo {
 
     private int maksymalnaGlebokosc;
     private double maxLewo,maxPrawo,minOdlegosc;
+
+    private Preferences prefs;
     public Drzewo() {
         this.graf = new SingleGraph("Drzewo Decyzyjne");
         this.listaWierzcholkow = new ArrayList<>();
         this.maksymalnaGlebokosc=0;
         this.maxLewo = -357.50;
         this.maxPrawo = 294.00;
-        Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
-        this.minOdlegosc = prefs.getInt("minimalnaOdleglosc", 50);
+        this.prefs = Preferences.userNodeForPackage(UstawieniaController.class);
+        this.minOdlegosc = prefs.getInt("minimalnaOdleglosc", 60);
     }
 
     public Graph getGraf() {
@@ -38,31 +40,27 @@ public class Drzewo {
     }
 
     public void dodajKrawedz(Krawedz krawedz) {
-        // Dodajemy krawędź do grafu
+
         graf.addEdge(krawedz.getId(), krawedz.getPierwszyPunktId(), krawedz.getDrugiPunktId())
                 .setAttribute("ui.label", krawedz.getLabel());
-        // Szukamy rodzica
+
         Optional<Wierzcholek> opcjonalnyRodzic = listaWierzcholkow.stream()
                 .filter(w -> w.getId().equals(krawedz.getPierwszyPunktId()))
                 .findFirst();
 
-        // Szukamy dziecka
+
         Optional<Wierzcholek> opcjonalneDziecko = listaWierzcholkow.stream()
                 .filter(w -> w.getId().equals(krawedz.getDrugiPunktId()))
                 .findFirst();
-        // Ustalanie rodzica i dziecka
+
         if (opcjonalnyRodzic.isPresent() && opcjonalneDziecko.isPresent()) {
             Wierzcholek rodzic = opcjonalnyRodzic.get();
             Wierzcholek dziecko = opcjonalneDziecko.get();
             dziecko.setWartosc(krawedz.getLabel());
             dziecko.setRodzicId(rodzic.getId());
             rodzic.dodajDziecko(dziecko.getId());
-
-          //  System.out.println("Ustawiam rodzica: " + rodzic.getId() + " jako rodzica dla " + dziecko.getId());
-        } else {
-            //System.out.println("Nie znaleziono wierzchołków dla podanej krawędzi.");
         }
-        System.out.println(krawedz.getId()+ "   "+krawedz.getLabel());
+
     }
 
     public void edytujWierzcholek(Wierzcholek nowyWierzcholek, String idStaregoWierzcholka) {
@@ -71,15 +69,11 @@ public class Drzewo {
         for (Wierzcholek w : listaWierzcholkow) {
             wierzcholekMap.put(w.getId(), w);
         }
-        System.out.println("Wywoluje "+idStaregoWierzcholka);
         Wierzcholek staryWierzcholek = wierzcholekMap.get(idStaregoWierzcholka);
 
         if (staryWierzcholek != null) {
-            System.out.println("edytuje");
-            // Zaktualizuj istniejący wierzchołek bez jego usuwania z listy
             staryWierzcholek.setLabel(nowyWierzcholek.getLabel());
             staryWierzcholek.setFullLabel(nowyWierzcholek.getFullLabel());
-            // Aktualizujemy dzieci
             List<String> stareDzieci = staryWierzcholek.getDzieciId();
 
             // Aktualizacja ID dzieci (jeśli się zmieniają)
@@ -105,8 +99,8 @@ public class Drzewo {
     public Wierzcholek getWierzcholekByid(String id)
     {
         return listaWierzcholkow.stream()
-                .filter(w -> w.getId().equals(id)) // Filtruje elementy po pasującym id
-                .findFirst()                       // Znajduje pierwszy pasujący element
+                .filter(w -> w.getId().equals(id))
+                .findFirst()
                 .orElse(null);
     }
 
@@ -147,33 +141,77 @@ public class Drzewo {
                        .collect(Collectors.toList());
 
                boolean czyZmiana;
+
+               double maxOdleglosc = 0;
+               int maxOdlegloscIndex1 = -1;
+               int maxOdlegloscIndex2 = -1;
+               int iteracja = 1;
+               minOdlegosc = prefs.getInt("minimalnaOdleglosc", 60);
                do {
                    czyZmiana = false;
-                   for (int j = 0; j < listaGlebokosci.size() - 1; j++)
-                   {
+
+                   double maxOdlegloscTemp = 0;
+                   int maxIndex1Temp = -1;
+                   int maxIndex2Temp = -1;
+
+
+                   for (int j = 0; j < listaGlebokosci.size() - 1; j++) {
                        Wierzcholek aktualny = listaGlebokosci.get(j);
                        Wierzcholek kolejny = listaGlebokosci.get(j + 1);
 
-                       double odleglosc = kolejny.getPozX() - aktualny.getPozX();
+                       double odleglosc = Math.abs(kolejny.getPozX() - aktualny.getPozX());
 
-                       if (odleglosc < minOdlegosc)
-                       {
+                       if (odleglosc > maxOdlegloscTemp) {
+                           maxOdlegloscTemp = odleglosc;
+                           maxIndex1Temp = j;
+                           maxIndex2Temp = j + 1;
+                       }
+
+
+                       while (minOdlegosc * (listaGlebokosci.size() - 1) > Math.abs(maxLewo) + Math.abs(maxPrawo)) {
+                           minOdlegosc -= 10;
+                       }
+
+                       if (odleglosc < this.minOdlegosc) {
                            double przestrzenLewo = j == 0 ? aktualny.getPozX() - maxLewo : aktualny.getPozX() - listaGlebokosci.get(j - 1).getPozX();
                            double przestrzenPrawo = j + 1 == listaGlebokosci.size() - 1 ? maxPrawo - kolejny.getPozX() : listaGlebokosci.get(j + 2).getPozX() - kolejny.getPozX();
 
-                           if (przestrzenPrawo >= przestrzenLewo)
-                           {
+                           if (przestrzenPrawo >= przestrzenLewo) {
                                kolejny.setPozX(kolejny.getPozX() + (minOdlegosc - odleglosc));
-                           }
-                           else
-                           {
+                           } else {
                                aktualny.setPozX(aktualny.getPozX() - (minOdlegosc - odleglosc));
                            }
-
                            czyZmiana = true;
                        }
                    }
+
+                   if (iteracja %10==0) {
+                       if (maxOdlegloscTemp > minOdlegosc) {
+                           Wierzcholek wierzcholek1 = listaGlebokosci.get(maxIndex1Temp);
+                           Wierzcholek wierzcholek2 = listaGlebokosci.get(maxIndex2Temp);
+
+                           double przesuniecie = (maxOdlegloscTemp - minOdlegosc) / 2;
+
+                           if (przesuniecie > 0) {
+                               wierzcholek1.setPozX(wierzcholek1.getPozX() + przesuniecie);
+                               wierzcholek2.setPozX(wierzcholek2.getPozX() - przesuniecie);
+                           }
+                           czyZmiana = true;
+                       }
+                       if(iteracja % 20 ==0)
+                       {
+                           minOdlegosc-=10;
+                       }
+                   }
+
+
+                   iteracja++;
+                    if(minOdlegosc<=0)
+                    {
+                        break;
+                    }
                } while (czyZmiana);
+
 
                if (finalI > 0)
                {
@@ -216,9 +254,12 @@ public class Drzewo {
                        }
                    }
                }
+
            }
+
        }
        poprawSymetrieRodzicow();
+       ustawKolejnosc();
     }
     private void poprawSymetrieRodzicow() {
         for (int i = 0; i < this.maksymalnaGlebokosc; i++) {
@@ -267,9 +308,31 @@ public class Drzewo {
                 }
             }
         }
+
+    }
+    private void ustawKolejnosc()
+    {
+        for (int i = maksymalnaGlebokosc; i >= 0; i--) {
+            int finalI = i;
+
+            List<Wierzcholek> listaGlebokosci = listaWierzcholkow.stream()
+                    .filter(w -> w.getGlebokosc() == finalI)
+                    .collect(Collectors.toList());
+
+
+            List<Double> odleglosci = listaGlebokosci.stream()
+                    .map(Wierzcholek::getPozX)
+                    .sorted(Comparator.reverseOrder())  // Sortowanie malejąco
+                    .collect(Collectors.toList());
+
+            for (int j = 0; j < listaGlebokosci.size(); j++) {
+                Wierzcholek wierzcholek = listaGlebokosci.get(j);
+                wierzcholek.setPozX(odleglosci.get(j));
+            }
+
+        }
         ustawPozycjeXYzUstawien();
     }
-
     public int obliczIleJuzJestTakichWierzcholkow(String newId)
     {
         return (int) listaWierzcholkow.stream()

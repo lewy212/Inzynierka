@@ -1,9 +1,5 @@
 package com.example.inzynierka;
 
-import com.example.inzynierka.klasy.Drzewo;
-import com.example.inzynierka.klasy.Json.GrafWczytajJson;
-import com.example.inzynierka.klasy.Json.JsonDrzewo;
-import com.example.inzynierka.klasy.Xml.GrafWczytajXml;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,9 +8,7 @@ import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class MainApplication extends Application {
     @Override

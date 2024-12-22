@@ -1,4 +1,4 @@
-package com.example.inzynierka.klasy;
+package com.example.inzynierka.klasy.ElementyDrzewa;
 
 import java.util.ArrayList;
 import java.util.List;

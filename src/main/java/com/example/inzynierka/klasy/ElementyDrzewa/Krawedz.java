@@ -1,4 +1,4 @@
-package com.example.inzynierka.klasy;
+package com.example.inzynierka.klasy.ElementyDrzewa;
 
 public class Krawedz {
     private String id;

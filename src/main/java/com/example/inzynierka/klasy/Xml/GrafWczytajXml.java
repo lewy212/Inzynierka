@@ -1,10 +1,8 @@
 package com.example.inzynierka.klasy.Xml;
 
-import com.example.inzynierka.klasy.Drzewo;
-import com.example.inzynierka.klasy.Json.DaneNazwy;
-import com.example.inzynierka.klasy.Json.JsonDrzewo;
-import com.example.inzynierka.klasy.Krawedz;
-import com.example.inzynierka.klasy.Wierzcholek;
+import com.example.inzynierka.klasy.ElementyDrzewa.Drzewo;
+import com.example.inzynierka.klasy.ElementyDrzewa.Krawedz;
+import com.example.inzynierka.klasy.ElementyDrzewa.Wierzcholek;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

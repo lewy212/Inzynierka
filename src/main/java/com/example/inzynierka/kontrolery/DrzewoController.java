@@ -1,11 +1,12 @@
 package com.example.inzynierka.kontrolery;
 
 import com.example.inzynierka.MainApplication;
-import com.example.inzynierka.klasy.Drzewo;
-import com.example.inzynierka.klasy.GrafWczytajTxt;
+import com.example.inzynierka.klasy.DrzewoGenerator;
+import com.example.inzynierka.klasy.ElementyDrzewa.Drzewo;
+import com.example.inzynierka.klasy.Txt.GrafWczytajTxt;
 import com.example.inzynierka.klasy.Json.GrafWczytajJson;
-import com.example.inzynierka.klasy.Krawedz;
-import com.example.inzynierka.klasy.Wierzcholek;
+import com.example.inzynierka.klasy.ElementyDrzewa.Krawedz;
+import com.example.inzynierka.klasy.ElementyDrzewa.Wierzcholek;
 import com.example.inzynierka.klasy.Xml.GrafWczytajXml;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -38,10 +39,7 @@ import org.graphstream.stream.ProxyPipe;
 import org.graphstream.stream.file.FileSinkSVG;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
-import org.graphstream.ui.geom.Point2;
-import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.javafx.FxGraphRenderer;
-import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 //import static org.graphstream.algorithm.Toolkit.*;
@@ -95,21 +93,16 @@ public class DrzewoController {
 
     private Wierzcholek poprzednioWybranyWierzcholek = null;
     private String shapeWezlow, shapeLisci,liczbaPx,kolorWezlow,kolorLisci,obramowaniePx,kolorObramowania,sizeMode,kolorTekstu,kolorWyboranegoElementu,format,sciezka;
-    private int paddingWezlow=4, paddingLisci=4;
+    private int paddingWezlow=4, paddingLisci=4,glebokoscGenerowana;
     boolean buttonClicked = false,wyszedlemZeZmiany = false;
     public void initialize() throws IOException, JAXBException {
         Drzewo drzewo = new Drzewo();
         readSetting();
-        System.out.println("TAKI SHAPE: "+ shapeWezlow);
         wczytajZPliku(drzewo);
 
-        System.out.println("Kolor Tekstu: "+kolorTekstu);
         drzewo.getGraf().setAttribute("ui.stylesheet"," node { shape: " + shapeWezlow + ";text-alignment:center; text-offset: 4px, 1px; size-mode: "+sizeMode+"; size: "+liczbaPx+"; text-color:"+kolorTekstu+"; fill-color: "+kolorWezlow+";" +
                 "stroke-mode: plain; stroke-color:"+kolorObramowania+"; stroke-width:"+obramowaniePx+"; padding:"+paddingLisci+",3px;} graph {padding: 47px;}");
-//        drzewo.getGraf().setAttribute("ui.stylesheet", "node { fill-color: red; shape: box; size:40px; text-size: 6px; text-alignment:center; }" +
-//                "edge { text-alignment:under; text-background-mode: plain; text-size: 12px; }");
         ustawLiscie(drzewo,true);
-        System.out.println(drzewo.getGraf().getNodeCount());
         String tekst = "";
         zmienWyswietlenie(drzewo);
         drzewo.poprawUstawienieWierzcholkow();
@@ -135,17 +128,13 @@ public class DrzewoController {
         ObservableList<Wierzcholek> daneDrzewa = FXCollections.observableArrayList();
         List<Wierzcholek> listaWierzcholkow = drzewo.getListaWierzcholkow();
         for (Wierzcholek wierzcholek : listaWierzcholkow) {
-            daneDrzewa.add(wierzcholek); // Dodajemy wierzchołki do listy
-            System.out.println(wierzcholek.getId()+" x: "+wierzcholek.getPozX()+"   y: "+wierzcholek.getPozY());
+            daneDrzewa.add(wierzcholek);
         }
-        System.out.println(drzewo.getWierzcholekByid("F9.").getStrona());
-        tableView.setItems(daneDrzewa); // Ustawiamy dane w tabeli
-        // Dodajemy listener kliknięcia wiersza tabeli
+        tableView.setItems(daneDrzewa);
         tableView.setRowFactory(tv -> {
             TableRow<Wierzcholek> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    System.out.println("Kliknalem w taberli zeby edytowac");
                     Wierzcholek wybranyWierzcholek = row.getItem();
                     String nodeId = wybranyWierzcholek.getId();
                     double wierzcholekColumnStart = nodeColumn.getWidth();
@@ -178,33 +167,11 @@ public class DrzewoController {
             tekst = tekst + drzewo.getGraf().getNode(i).getId() + " ";
         }
 
-
-        Object obj = drzewo.getGraf().getNode(0).getAttribute("xy");
-        if (obj instanceof double[]) {
-            double[] position = (double[]) obj;
-            System.out.println("Pozycja pierwszego elementu: x=" + position[0] + ", y=" + position[1]);
-        } else {
-            System.out.println("Brak pozycji dla węzła lub błąd w typie atrybutu.");
-        }
         FxViewer view = new FxViewer(drzewo.getGraf(), FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         FxViewPanel panel = (FxViewPanel) view.addView(FxViewer.DEFAULT_VIEW_ID, new FxGraphRenderer());
         view.getDefaultView().enableMouseOptions();
         StackPane graphPane = new StackPane();
         graphPane.getChildren().addAll(panel);
-
-
-        for (int i = 0; i < drzewo.getMaksymalnaGlebokosc(); i++) {
-            int finalI = i;
-            String wierzcholkiNaGlebokosci = drzewo.getListaWierzcholkow().stream()
-                    .filter(w -> w.getGlebokosc() == finalI)   // Filtrujemy wierzchołki o głębokości równej i
-                    .map(Wierzcholek::getId)             // Mapujemy do ich ID
-                    .collect(Collectors.joining(", ")); // Łączymy ID w jeden string, rozdzielając przecinkami
-
-            System.out.println("Wierzchołki na głębokości " + i + ": " + wierzcholkiNaGlebokosci);
-        }
-
-
-
 
         ViewerPipe pipe = view.newViewerPipe();
         ProxyPipe pipe2 = view.newViewerPipe();
@@ -222,11 +189,8 @@ public class DrzewoController {
                 buttonClicked = true;
                 Platform.runLater(() -> {
                     if (drzewo.getGraf().getEdge(id) != null) {
-                        System.out.println("Kliknięto krawędź: " + id);
+
                     } else if (drzewo.getGraf().getNode(id) != null) {
-
-                        System.out.println("Kliknięto węzeł: " + id);
-
 
                         zmienWierzcholek2(drzewo, id,false);
                     }
@@ -366,7 +330,6 @@ public class DrzewoController {
 
                             System.out.println("Zmieniono ID węzła na: " + newId);
 
-
                             Node newNode = drzewo.getGraf().addNode(newId);
                             Wierzcholek nowyWierzcholek = new Wierzcholek(newId, usunKropki(newId),usunKropki(newId) +" " +field2.getText().trim());
 
@@ -411,7 +374,7 @@ public class DrzewoController {
                     {
                         zmienKolorWybranychElementow(drzewo,finalWierzcholek,false);
                     }
-                    System.out.println();
+
                 }
                 return null;
             });
@@ -565,6 +528,7 @@ public class DrzewoController {
         kolorWyboranegoElementu = prefs.get("kolorWyboranegoElementu","red");
         format = prefs.get("format","txt");
         sciezka = prefs.get("sciezka","");
+        glebokoscGenerowana = prefs.getInt("glebokoscGenerowana",0);
     }
     private void ustawLiscie(Drzewo drzewo,boolean kolor){
         for(Wierzcholek wierzcholek: drzewo.getListaWierzcholkow())
@@ -600,8 +564,14 @@ public class DrzewoController {
         else if (format.equals("json"))
         {
             GrafWczytajJson grafWczytajJson = new GrafWczytajJson();
-
-            if(sciezka.equals(""))
+            String wygenerowanaSciezka = "";
+            if(glebokoscGenerowana>0)
+            {
+                File wygenerowanyPlik = DrzewoGenerator.drzewoDoPliku(glebokoscGenerowana,  "wygenerowane_drzewo.json");
+                wygenerowanaSciezka = wygenerowanyPlik.getAbsolutePath();
+                grafWczytajJson.loadGraph(wygenerowanaSciezka,drzewo,false);
+            }
+            else if(sciezka.equals(""))
             {
                 grafWczytajJson.loadGraph("/Dane/drzewo_decyzyjne_json.json",drzewo,true);
             }
@@ -617,7 +587,6 @@ public class DrzewoController {
 
             if(sciezka.equals(""))
             {
-                System.out.println("przykladowy");
                 grafWczytajXml.loadGraph("/Dane/decisionTree.xml",drzewo,true);
             }
             else
