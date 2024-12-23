@@ -26,17 +26,24 @@
     -fx-pref-width: 200; /* Zmniejszenie szerokości przycisków */
     -fx-padding: 8 16; /* Mniejsze paddingi */
     -fx-font-weight: bold;
-    -fx-font-size: 18px; /* Zmniejszenie fontu */
+
 }
 
 /* Przyciski niebieski i ciemny */
+.czerwonyButton {
+    -fx-background-color: #ff0404;
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+}
 .niebieskiButton {
     -fx-background-color: #03A9F4;
+    -fx-font-size: 18px; /* Zmniejszenie fontu */
     -fx-text-fill: white;
 }
 
 .ciemnyButton {
     -fx-background-color: #37474F;
+    -fx-font-size: 18px; /* Zmniejszenie fontu */
     -fx-text-fill: white;
 }
 
@@ -152,4 +159,53 @@
     -fx-font-size: 13px;
     -fx-padding: 6 12;
 }
+
+.custom-dialog {
+    -fx-background-color: #FFFFFF;
+
+    -fx-padding: 20px;
+}
+
+.custom-dialog .header-panel {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+.custom-dialog .content {
+    -fx-font-size: 16px;
+    -fx-text-fill: #37474F;
+    -fx-padding: 10px;
+}
+
+.custom-dialog .button-bar {
+    -fx-background-color: #ECEFF1;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+.custom-dialog .button {
+    -fx-background-radius: 5;
+    -fx-background-color: #03A9F4; /* Kolor niebieski */
+    -fx-text-fill: white;
+    -fx-font-size: 14px ;
+    -fx-padding: 5 10; /* Mniejszy padding */
+    -fx-min-width: 100px; /* Minimalna szerokość przycisków */
+}
+
+.custom-dialog .button:hover {
+    -fx-background-color: #0288D1; /* Ciemniejszy niebieski na hover */
+}
+
+.custom-dialog .button:pressed {
+    -fx-background-color: #0277BD; /* Jeszcze ciemniejszy na kliknięcie */
+}
+
+
+.custom-alert {
+    -fx-border-color: #03A9F4;
+    -fx-border-radius: 10;
+    -fx-padding: 10;
+}
+
 

@@ -548,6 +548,7 @@ public class DrzewoController {
     }
 
     private void wczytajZPliku(Drzewo drzewo) throws IOException, JAXBException {
+        Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);
         if(format.equals("txt"))
         {
             GrafWczytajTxt grafWczytajTxt = new GrafWczytajTxt();
@@ -570,6 +571,7 @@ public class DrzewoController {
                 File wygenerowanyPlik = DrzewoGenerator.drzewoDoPliku(glebokoscGenerowana,  "wygenerowane_drzewo.json");
                 wygenerowanaSciezka = wygenerowanyPlik.getAbsolutePath();
                 grafWczytajJson.loadGraph(wygenerowanaSciezka,drzewo,false);
+                prefs.remove("glebokoscGenerowana");
             }
             else if(sciezka.equals(""))
             {

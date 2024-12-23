@@ -1,6 +1,7 @@
 package com.example.inzynierka;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -32,6 +33,10 @@ public class MainApplication extends Application {
         primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Wizualizator drzew decyzyjnych");
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
         primaryStage.show();
     }
     public static void main(String[] args) {

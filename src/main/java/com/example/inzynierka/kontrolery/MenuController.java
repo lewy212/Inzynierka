@@ -1,12 +1,15 @@
 package com.example.inzynierka.kontrolery;
 
 import com.example.inzynierka.MainApplication;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -46,10 +49,18 @@ public class MenuController {
         dialog.setHeaderText("Wybierz jedną z opcji");
         dialog.setContentText("Co chcesz zrobić?");
 
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("custom-dialog");
+        ImageView ikona = new ImageView(getClass().getResource("/drzewoIkonka.png").toExternalForm());
+        Stage dialogStage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/drzewoIkonka.png")));
+        ikona.setFitWidth(50); // Rozmiar szerokości
+        ikona.setFitHeight(50); // Rozmiar wysokości
+        dialog.setGraphic(ikona);
         ButtonType wczytajPlikButton = new ButtonType("Wczytaj własny plik");
         ButtonType przykladowaButton = new ButtonType("Przykładowa wizualizacja");
         ButtonType generujButton = new ButtonType("Generuj drzewo");
-        ButtonType cancelButton = new ButtonType("Anuluj");
+        ButtonType cancelButton = new ButtonType("Anuluj",ButtonBar.ButtonData.CANCEL_CLOSE);
 
         dialog.getButtonTypes().setAll(wczytajPlikButton, przykladowaButton, generujButton, cancelButton);
 
@@ -186,5 +197,10 @@ public class MenuController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
+    @FXML
+    protected void zamknijProgram ()
+    {
+        Platform.exit();
+        System.exit(0);
+    }
 }

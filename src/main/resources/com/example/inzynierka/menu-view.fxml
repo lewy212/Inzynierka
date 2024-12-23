@@ -29,6 +29,14 @@
          <font>
             <Font name="System Bold" size="22.0" />
          </font>
+         <VBox.margin>
+            <Insets bottom="15.0" />
+         </VBox.margin>
+      </Button>
+      <Button fx:id="wyjdzButton" mnemonicParsing="false" onAction="#zamknijProgram" text="Wyjdz" styleClass="czerwonyButton">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
       </Button>
    </children>
 </VBox>
