@@ -31,7 +31,6 @@ public class GrafWczytajXml {
                     throw new IllegalArgumentException("Plik nie został znaleziony w zasobach: " + filePath);
                 }
                 XmlDrzewo drzewoXml = (XmlDrzewo) unmarshaller.unmarshal(inputStream);
-                // Przypisanie danych do obiektu Drzewo
                 Drzewo noweDrzewo = przypiszDane(drzewoXml.getNode(), drzewo, null, null, null,0);
 
 

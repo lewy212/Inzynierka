@@ -6,17 +6,17 @@
 
 <BorderPane fx:id="borderPaneGlowny" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="541.0" prefWidth="503.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inzynierka.kontrolery.DrzewoController">
    <right>
-      <!-- StackPane pozwala na nałożenie widoków na siebie -->
+
       <StackPane fx:id="contentPane">
-         <!-- Menu z checkboxami -->
+
          <VBox fx:id="checkBoxMenu" maxHeight="Infinity" prefWidth="186.0" spacing="10" visible="false" VBox.vgrow="ALWAYS">
             <CheckBox fx:id="checkBoxName" mnemonicParsing="false" selected="true" text="Nazwa" />
             <CheckBox fx:id="checkBoxClass" mnemonicParsing="false" text="Klasa" />
             <CheckBox fx:id="checkBoxAttempts" mnemonicParsing="false" text="Liczba prób" />
             <CheckBox fx:id="checkBoxCondition" mnemonicParsing="false" text="Warunek" />
+            <CheckBox fx:id="checkBoxEdge" mnemonicParsing="false" selected="true" text="Wyswietl Label Krawedzi" />
          </VBox>
 
-         <!-- Tabela ukryta na początku -->
          <VBox fx:id="tableMenu" maxHeight="Infinity" maxWidth="Infinity" visible="false" VBox.vgrow="ALWAYS">
             <TableView fx:id="tableView" maxHeight="Infinity" maxWidth="Infinity" prefHeight="2000.0" prefWidth="250">
                <columns>

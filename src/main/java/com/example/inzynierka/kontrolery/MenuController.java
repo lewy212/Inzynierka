@@ -29,6 +29,7 @@ public class MenuController {
     @FXML
     private Button wczytajDrzewoButton;
 
+
     @FXML
     protected void goToUstawienia() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ustawienia-view.fxml"));
@@ -60,10 +61,10 @@ public class MenuController {
         ButtonType wczytajPlikButton = new ButtonType("Wczytaj własny plik");
         ButtonType przykladowaButton = new ButtonType("Przykładowa wizualizacja");
         ButtonType generujButton = new ButtonType("Generuj drzewo");
-        ButtonType cancelButton = new ButtonType("Anuluj",ButtonBar.ButtonData.CANCEL_CLOSE);
-
+        ButtonType cancelButton = new ButtonType("Cancel",ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getButtonTypes().setAll(wczytajPlikButton, przykladowaButton, generujButton, cancelButton);
-
+        Button cancelButtonNode = (Button) dialog.getDialogPane().lookupButton(cancelButton);
+        cancelButtonNode.getStyleClass().add("cancel-button");
         Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.isPresent()) {
@@ -99,7 +100,6 @@ public class MenuController {
             String fileName = selectedFile.getName();
             System.out.println("Nazwa pliku: " + fileName);
 
-            // Wyodrębnij format (rozszerzenie pliku)
             String format = "";
             int dotIndex = fileName.lastIndexOf('.');
             if (dotIndex > 0 && dotIndex < fileName.length() - 1)
@@ -109,7 +109,6 @@ public class MenuController {
             prefs.put("format",format);
             prefs.put("sciezka",filePath);
             zmienOknoNaWizualizacje();
-            // Możesz dodać logikę wczytywania pliku tutaj
         }
     }
 
@@ -118,7 +117,14 @@ public class MenuController {
         dialog.setTitle("Podaj głębokość drzewa");
         dialog.setHeaderText("Wprowadź głębokość drzewa");
         dialog.setContentText("Głębokość (od 2 do 5):");
-
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("custom-dialog");
+        ImageView ikona = new ImageView(getClass().getResource("/drzewoIkonka.png").toExternalForm());
+        Stage dialogStage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/drzewoIkonka.png")));
+        ikona.setFitWidth(50); // Rozmiar szerokości
+        ikona.setFitHeight(50); // Rozmiar wysokości
+        dialog.setGraphic(ikona);
         Optional<String> result = dialog.showAndWait();
 
         result.ifPresent(input -> {
@@ -155,7 +161,14 @@ public class MenuController {
         choiceDialog.setTitle("Przykładowa wizualizacja");
         choiceDialog.setHeaderText("Wybierz format wizualizacji");
         choiceDialog.setContentText("Dostępne formaty:");
-
+        choiceDialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        choiceDialog.getDialogPane().getStyleClass().add("custom-dialog");
+        ImageView ikona = new ImageView(getClass().getResource("/drzewoIkonka.png").toExternalForm());
+        Stage dialogStage = (Stage) choiceDialog.getDialogPane().getScene().getWindow();
+        dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/drzewoIkonka.png")));
+        ikona.setFitWidth(50); // Rozmiar szerokości
+        ikona.setFitHeight(50); // Rozmiar wysokości
+        choiceDialog.setGraphic(ikona);
         Optional<String> result = choiceDialog.showAndWait();
 
         result.ifPresent(format -> {
@@ -182,10 +195,6 @@ public class MenuController {
         Parent root = loader.load();
         Scene currentScene = menuLabel.getScene();
         Stage stage = (Stage) currentScene.getWindow();
-        // root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-
-        //WynikiModel.getInstance().getWyniki().add(new Wynik("GraczXD", savedDifficulty, 100));
-
 
         stage.setScene(new Scene(root, currentScene.getWidth(), currentScene.getHeight()));
     }

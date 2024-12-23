@@ -273,12 +273,9 @@ public class GrafWczytajTxt {
         drzewo.dodajKrawedz(krawedz1);
         wykorzystaneLiscie[wykorzystaneLiscie.length-1] = parts[liczbaKresek+5];
     }
-//    private void ustawPolozenieWierzcholka(Wierzcholek wierzcholek,Drzewo drzewo,int liczbaKresek,boolean prawoCzyLewo,boolean czyLisc,String linia)
-//    {
-//
-//    }
+
     private void ustawPolozenieWierzcholka2(Wierzcholek wierzcholek, Drzewo drzewo, Wierzcholek poprzedniWierzcholek) {
-        // Ustawianie pozycji wierzchołka zależnie od odpowiedzi "yes" lub "no"
+
         if(poprzedniWierzcholek==null)
         {
             wierzcholek.setPozX(0.0);

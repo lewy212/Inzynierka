@@ -7,8 +7,8 @@ public class Wierzcholek {
     private String id;
     private String label;
     private String fullLabel;
-    private String rodzicId; // Id rodzica
-    private List<String> dzieciId; // Lista identyfikatorów dzieci
+    private String rodzicId;
+    private List<String> dzieciId;
     private Double pozX;
     private Double pozY;
     private Double roznica;
@@ -19,15 +19,15 @@ public class Wierzcholek {
     public Wierzcholek(String id, String label) {
         this.id = id;
         this.label = label;
-        this.rodzicId = null; // Domyślnie brak rodzica
-        this.dzieciId = new ArrayList<>(); // Inicjalizacja listy dzieci
+        this.rodzicId = null;
+        this.dzieciId = new ArrayList<>();
     }
     public Wierzcholek(String id, String label,String fullLabel) {
         this.id = id;
         this.label = label;
         this.fullLabel = fullLabel;
-        this.rodzicId = null; // Domyślnie brak rodzica
-        this.dzieciId = new ArrayList<>(); // Inicjalizacja listy dzieci
+        this.rodzicId = null;
+        this.dzieciId = new ArrayList<>();
     }
 
     public String getId() {

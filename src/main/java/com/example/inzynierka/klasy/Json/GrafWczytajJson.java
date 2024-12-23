@@ -57,8 +57,7 @@ public class GrafWczytajJson {
             }
             else
             {
-//                Krawedz krawedz = new Krawedz(poprzedniWierzcholek.getId()+wierzcholek.getId(),poprzedniWierzcholek.getId(),wierzcholek.getId()
-//                        ,odwrocZnak(poprzedniDaneNazwy.getLabel(),czyTak));
+
                 Krawedz krawedz = new Krawedz(poprzedniWierzcholek.getId()+wierzcholek.getId(),poprzedniWierzcholek.getId(),wierzcholek.getId()
                         ,czyTak);
                 drzewo.dodajKrawedz(krawedz);
@@ -117,7 +116,7 @@ public class GrafWczytajJson {
                 odwroconyOperator = "<=";
                 break;
             default:
-                odwroconyOperator = operator;  // Jeśli nie rozpoznano operatora, zwróć oryginalny
+                odwroconyOperator = operator;
                 break;
         }
         return odwroconyOperator+" "+liczba;

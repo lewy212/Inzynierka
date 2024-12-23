@@ -17,6 +17,7 @@
             <Insets top="20.0" />
          </VBox.margin>
       </Label>
+      <Label fx:id="warningLabel" styleClass="warning-label" text="Aby ustawić rozmiar węzłów, zmień Size Mode" />
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
             <Label styleClass="labelChoiceBox" text="Kształt węzłów: ">
@@ -66,7 +67,7 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label styleClass="labelChoiceBox" text="Liczba px: ">
+            <Label styleClass="labelChoiceBox" text="Rozmiar węzłów:">
                <font>
                   <Font size="18.0" />
                </font>

@@ -1,6 +1,8 @@
 package com.example.inzynierka.kontrolery;
 
 import com.example.inzynierka.MainApplication;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,8 @@ import java.util.prefs.Preferences;
 public class UstawieniaController {
     @FXML
     private Label ustawieniaLabel;
+    @FXML
+    private Label warningLabel;
     @FXML
     private ChoiceBox<String> shapeWezlow;
     @FXML
@@ -75,6 +79,20 @@ public class UstawieniaController {
     }
 
     public void initialize() {
+        sizeMode.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if ("fit".equals(newValue)) {
+                    // Zablokowanie Spinnera i pokazanie ostrzeżenia
+                    liczbaPx.setDisable(true);
+                    warningLabel.setVisible(true);
+                } else {
+                    // Odblokowanie Spinnera i ukrycie ostrzeżenia
+                    liczbaPx.setDisable(false);
+                    warningLabel.setVisible(false);
+                }
+            }
+        });
         // Ustawienie domyślnej wartości
         shapeWezlow.setValue("circle");
         shapeLisci.setValue("box");
@@ -89,6 +107,9 @@ public class UstawieniaController {
         kolorKrawedzi.setValue("black");
         minimalnaOdleglosc.getValueFactory().setValue(60);
         loadSettings();
+
+
+
     }
     private void saveSettings() {
         Preferences prefs = Preferences.userNodeForPackage(UstawieniaController.class);

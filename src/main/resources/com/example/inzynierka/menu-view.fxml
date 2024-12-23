@@ -16,7 +16,6 @@
          </VBox.margin>
       </Label>
 
-      <!-- Przyciski -->
       <Button fx:id="wczytajDrzewoButton" mnemonicParsing="false" onAction="#goToWizualizacja" prefWidth="224.0" text="Wczytaj Drzewo" styleClass="niebieskiButton">
          <font>
             <Font name="System Bold" size="22.0" />

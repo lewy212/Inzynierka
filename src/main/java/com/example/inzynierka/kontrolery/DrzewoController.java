@@ -90,7 +90,7 @@ public class DrzewoController {
     @FXML private CheckBox checkBoxClass;
     @FXML private CheckBox checkBoxAttempts;
     @FXML private CheckBox checkBoxCondition;
-
+    @FXML private CheckBox checkBoxEdge;
     private Wierzcholek poprzednioWybranyWierzcholek = null;
     private String shapeWezlow, shapeLisci,liczbaPx,kolorWezlow,kolorLisci,obramowaniePx,kolorObramowania,sizeMode,kolorTekstu,kolorWyboranegoElementu,format,sciezka;
     private int paddingWezlow=4, paddingLisci=4,glebokoscGenerowana;
@@ -101,11 +101,14 @@ public class DrzewoController {
         wczytajZPliku(drzewo);
 
         drzewo.getGraf().setAttribute("ui.stylesheet"," node { shape: " + shapeWezlow + ";text-alignment:center; text-offset: 4px, 1px; size-mode: "+sizeMode+"; size: "+liczbaPx+"; text-color:"+kolorTekstu+"; fill-color: "+kolorWezlow+";" +
-                "stroke-mode: plain; stroke-color:"+kolorObramowania+"; stroke-width:"+obramowaniePx+"; padding:"+paddingLisci+",3px;} graph {padding: 47px;}");
+                "stroke-mode: plain; stroke-color:"+kolorObramowania+"; stroke-width:"+obramowaniePx+"; padding:"+paddingLisci+",3px;} graph {padding: 47px;} ");
         ustawLiscie(drzewo,true);
         String tekst = "";
         zmienWyswietlenie(drzewo);
         drzewo.poprawUstawienieWierzcholkow();
+
+
+
         nodeColumn.setCellValueFactory(new PropertyValueFactory<>("label"));
         parentColumn.setCellValueFactory(new PropertyValueFactory<>("rodzicId"));
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("wartosc"));
@@ -262,6 +265,7 @@ public class DrzewoController {
         checkBoxAttempts.setOnAction(e -> zmienWyswietlenie(drzewo));
         checkBoxClass.setOnAction(e -> zmienWyswietlenie(drzewo));
         checkBoxCondition.setOnAction(e -> zmienWyswietlenie(drzewo));
+        checkBoxEdge.setOnAction(e -> zmienLabelKrawedzi(drzewo));
 
     }
 
@@ -392,7 +396,6 @@ public class DrzewoController {
         dialog.setTitle("Zmiana wartosci krawedzi");
         dialog.setHeaderText("Zmień wartosc krawedzi");
         dialog.setContentText("Wprowadź nową wartosc dla krawedzi:");
-
         // Wyświetlamy dialog i czekamy na wynik
         dialog.showAndWait().ifPresent(newValue -> {
             if (!newValue.trim().isEmpty()) {
@@ -443,6 +446,9 @@ public class DrzewoController {
     private void zmienWyswietlenie(Drzewo drzewo)
     {
         Graph graph = drzewo.getGraf();
+        String currentStylesheet = drzewo.getGraf().getAttribute("ui.stylesheet").toString();
+        System.out.println(currentStylesheet);
+        drzewo.getGraf().setAttribute("ui.stylesheet", currentStylesheet);
         List<Wierzcholek> listaWierzcholkow  = drzewo.getListaWierzcholkow();
         for(Node node : drzewo.getGraf())
         {
@@ -728,7 +734,25 @@ public class DrzewoController {
             e.printStackTrace();
         }
     }
+    private void zmienLabelKrawedzi(Drzewo drzewo)
+    {
+        String currentStylesheet = drzewo.getGraf().getAttribute("ui.stylesheet").toString();
+        String newStylesheet;
+        if(checkBoxEdge.isSelected())
+        {
+            newStylesheet = currentStylesheet.replace("edge { text-mode: hidden; }", "edge { text-mode: normal; }");
+        }
+        else {
+            if (!currentStylesheet.contains("edge { text-mode: hidden; }")) {
+                newStylesheet = currentStylesheet + " edge { text-mode: hidden; }";
+            } else {
+                newStylesheet = currentStylesheet;
+            }
+        }
 
+        drzewo.getGraf().setAttribute("ui.stylesheet", newStylesheet);
+
+    }
     @FXML
     protected void Powrot() throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("menu-view.fxml"));

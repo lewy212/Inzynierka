@@ -48,7 +48,7 @@ public class Wezel {
     public void setLeaf(Lisc leaf) {
         this.leaf = leaf;
         if (leaf != null) {
-            leaf.setParent(this); // Ustawiamy rodzica dla liścia
+            leaf.setParent(this);
         }
     }
 
