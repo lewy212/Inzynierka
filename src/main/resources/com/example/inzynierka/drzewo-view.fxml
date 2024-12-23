@@ -50,7 +50,7 @@
                <HBox.margin>
                   <Insets right="15.0" bottom="-17.0" />
                </HBox.margin></Button>
-            <Button fx:id="pokazCheckBoxy" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Pokaz Checkboxy">
+            <Button fx:id="pokazCheckBoxy" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Ustawienia widoku">
                <HBox.margin>
                   <Insets right="15.0" bottom="-17.0" />
                </HBox.margin></Button>

@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -293,7 +294,14 @@ public class DrzewoController {
             TextField field2 = new TextField();
             String[] parts = wierzcholek.getFullLabel().split(" (?=\\S)");
             field2.setText(parts[1]+" "+parts[2]);
-
+            dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            dialog.getDialogPane().getStyleClass().add("custom-dialog");
+            ImageView ikona = new ImageView(getClass().getResource("/drzewoIkonka.png").toExternalForm());
+            Stage dialogStage = (Stage) dialog.getDialogPane().getScene().getWindow();
+            dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/drzewoIkonka.png")));
+            ikona.setFitWidth(50); // Rozmiar szerokości
+            ikona.setFitHeight(50); // Rozmiar wysokości
+            dialog.setGraphic(ikona);
             TextField field0 = new TextField();
             field0.setText(nodeId);
             field0.setEditable(false);
@@ -313,7 +321,8 @@ public class DrzewoController {
 
             ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
+            Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancelButton.getStyleClass().add("cancel-button");
             Wierzcholek finalWierzcholek = wierzcholek;
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == okButtonType) {
@@ -445,9 +454,7 @@ public class DrzewoController {
     }
     private void zmienWyswietlenie(Drzewo drzewo)
     {
-        Graph graph = drzewo.getGraf();
         String currentStylesheet = drzewo.getGraf().getAttribute("ui.stylesheet").toString();
-        System.out.println(currentStylesheet);
         drzewo.getGraf().setAttribute("ui.stylesheet", currentStylesheet);
         List<Wierzcholek> listaWierzcholkow  = drzewo.getListaWierzcholkow();
         for(Node node : drzewo.getGraf())

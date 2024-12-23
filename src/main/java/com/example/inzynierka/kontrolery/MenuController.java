@@ -95,20 +95,30 @@ public class MenuController {
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         if (selectedFile != null) {
-            Preferences prefs = Preferences.userNodeForPackage(MenuController.class);
-            String filePath = selectedFile.getAbsolutePath();
             String fileName = selectedFile.getName();
-            System.out.println("Nazwa pliku: " + fileName);
-
             String format = "";
             int dotIndex = fileName.lastIndexOf('.');
-            if (dotIndex > 0 && dotIndex < fileName.length() - 1)
-            {
+            if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
                 format = fileName.substring(dotIndex + 1).toLowerCase();
             }
-            prefs.put("format",format);
-            prefs.put("sciezka",filePath);
-            zmienOknoNaWizualizacje();
+
+            if (format.equals("txt") || format.equals("json") || format.equals("xml")) {
+                Preferences prefs = Preferences.userNodeForPackage(MenuController.class);
+                String filePath = selectedFile.getAbsolutePath();
+                prefs.put("format", format);
+                prefs.put("sciezka", filePath);
+                zmienOknoNaWizualizacje();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+                alert.getDialogPane().getStyleClass().add("custom-dialog");
+                Stage dialogStage = (Stage) alert.getDialogPane().getScene().getWindow();
+                dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/drzewoIkonka.png")));
+                alert.setTitle("Błąd formatu pliku");
+                alert.setHeaderText("Nieprawidłowy format pliku");
+                alert.setContentText("Dozwolone formaty: .txt, .json, .xml.\nWybrano plik: " + fileName);
+                alert.showAndWait();
+            }
         }
     }
 
@@ -125,6 +135,8 @@ public class MenuController {
         ikona.setFitWidth(50); // Rozmiar szerokości
         ikona.setFitHeight(50); // Rozmiar wysokości
         dialog.setGraphic(ikona);
+        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButton.getStyleClass().add("cancel-button");
         Optional<String> result = dialog.showAndWait();
 
         result.ifPresent(input -> {
@@ -169,6 +181,8 @@ public class MenuController {
         ikona.setFitWidth(50); // Rozmiar szerokości
         ikona.setFitHeight(50); // Rozmiar wysokości
         choiceDialog.setGraphic(ikona);
+        Button cancelButton = (Button) choiceDialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButton.getStyleClass().add("cancel-button");
         Optional<String> result = choiceDialog.showAndWait();
 
         result.ifPresent(format -> {
