@@ -118,6 +118,7 @@ public class MenuController {
                 alert.setHeaderText("Nieprawidłowy format pliku");
                 alert.setContentText("Dozwolone formaty: .txt, .json, .xml.\nWybrano plik: " + fileName);
                 alert.showAndWait();
+                wybierzPlik();
             }
         }
     }
@@ -215,6 +216,10 @@ public class MenuController {
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("custom-dialog");
+        Stage dialogStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/drzewoIkonka.png")));
         alert.setTitle("Błąd");
         alert.setHeaderText(null);
         alert.setContentText(message);
